@@ -1,0 +1,90 @@
+﻿<!doctype html>
+<html class="no-js" lang="zxx">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title> App landing</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="shortcut icon" type="image/x-icon" href="~/loginAssets/img/favicon.ico">
+
+    <!-- CSS here -->
+    <link rel="stylesheet" href="~/loginAssets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/loginAssets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/loginAssets/css/slicknav.css">
+    <link rel="stylesheet" href="~/loginAssets/css/flaticon.css">
+    <link rel="stylesheet" href="~/loginAssets/css/progressbar_barfiller.css">
+    <link rel="stylesheet" href="~/loginAssets/css/gijgo.css">
+    <link rel="stylesheet" href="~/loginAssets/css/animate.min.css">
+    <link rel="stylesheet" href="~/loginAssets/css/animated-headline.css">
+    <link rel="stylesheet" href="~/loginAssets/css/magnific-popup.css">
+    <link rel="stylesheet" href="~/loginAssets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="~/loginAssets/css/themify-icons.css">
+    <link rel="stylesheet" href="~/loginAssets/css/slick.css">
+    @*
+        <link rel="stylesheet" href="~/loginAssets/css/nice-select.css">*@
+    <link rel="stylesheet" href="~/loginAssets/css/style.css">
+</head>
+<body style="background-image: url(../..//assets/img/skills.png); background-size: cover; background-repeat: no-repeat;">
+
+
+
+    <main class="login-body">
+        @RenderBody()
+    </main>
+
+
+    <script src="~/loginAssets/js/vendor/modernizr-3.5.0.min.js"></script>
+    <!-- Jquery, Popper, Bootstrap -->
+    <script src="~/loginAssets/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="~/loginAssets/js/popper.min.js"></script>
+    <script src="~/loginAssets/js/bootstrap.min.js"></script>
+    <!-- Jquery Mobile Menu -->
+    <script src="~/loginAssets/js/jquery.slicknav.min.js"></script>
+
+    <!-- Video bg -->
+    <script src="~/loginAssets/js/jquery.vide.js"></script>
+
+    <!-- Jquery Slick , Owl-Carousel Plugins -->
+    <script src="~/loginAssets/js/owl.carousel.min.js"></script>
+    <script src="~/loginAssets/js/slick.min.js"></script>
+    <!-- One Page, Animated-HeadLin -->
+    <script src="~/loginAssets/js/wow.min.js"></script>
+    <script src="~/loginAssets/js/animated.headline.js"></script>
+    <script src="~/loginAssets/js/jquery.magnific-popup.js"></script>
+
+    <!-- Date Picker -->
+    <script src="~/loginAssets/js/gijgo.min.js"></script>
+    <!-- Nice-select, sticky -->
+    @*
+        <script src="~/loginAssets/js/jquery.nice-select.min.js"></script>*@
+    <script src="~/loginAssets/js/jquery.sticky.js"></script>
+    <!-- Progress -->
+    <script src="~/loginAssets/js/jquery.barfiller.js"></script>
+
+    <!-- counter , waypoint,Hover Direction -->
+    <script src="~/loginAssets/js/jquery.counterup.min.js"></script>
+    <script src="~/loginAssets/js/waypoints.min.js"></script>
+    <script src="~/loginAssets/js/jquery.countdown.min.js"></script>
+    <script src="~/loginAssets/js/hover-direction-snake.min.js"></script>
+
+    <!-- contact js -->
+    <script src="~/loginAssets/js/contact.js"></script>
+    <script src="~/loginAssets/js/jquery.form.js"></script>
+    <script src="~/loginAssets/js/jquery.validate.min.js"></script>
+    <script src="~/loginAssets/js/mail-script.js"></script>
+    <script src="~/loginAssets/js/jquery.ajaxchimp.min.js"></script>
+
+    <!-- Jquery Plugins, main Jquery -->
+    <script src="~/loginAssets/js/plugins.js"></script>
+    <script src="~/loginAssets/js/main.js"></script>
+
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

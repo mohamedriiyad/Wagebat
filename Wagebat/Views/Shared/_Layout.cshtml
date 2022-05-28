@@ -5,12 +5,12 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Arsha Bootstrap Template - Index</title>
+    <title>Wagebat</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="~/assets/img/favicon.png" rel="icon">
+    @*<link href="~/assets/img/favicon.png" rel="icon">*@
     <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
@@ -78,8 +78,8 @@
                             <li><a href="#">Drop Down 4</a></li>
                         </ul>
                     </li>
-                    <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-                    <li><a class="getstarted scrollto" href="#about">Get Started</a></li>
+                    <li><a class="nav-link scrollto" asp-area="Identity" asp-page="/Account/Register">Register</a></li>
+                    <li><a class="getstarted scrollto" asp-area="Identity" asp-page="/Account/Login">Login</a></li>
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>
             </nav><!-- .navbar -->

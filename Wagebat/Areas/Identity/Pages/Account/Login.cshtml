@@ -1,0 +1,36 @@
+﻿@page
+@model LoginModel
+
+@{
+    Layout = "~/views/shared/_LoginLayout.cshtml";
+}
+
+<main class="login-body">
+    <!-- Login Admin -->
+    <form class="form-default" id="account" method="post">
+
+        <div class="login-form">
+
+            <h2>Login Here</h2>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-input">
+                <input asp-for="Input.Username" placeholder="User name">
+                <span asp-validation-for="Input.Username" class="text-danger"></span>
+            </div>
+            <div class="form-input">
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                <input asp-for="Input.Password" placeholder="Password">
+            </div>
+            <div class="form-input pt-30">
+                <input type="submit" value="login">
+            </div>
+
+            <!-- Forget Password -->
+            <a href="#" class="forget">Forget Password</a>
+            <!-- Forget Password -->
+            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="registration">Registration</a>
+        </div>
+    </form>
+    <!-- /end login form -->
+</main>
+

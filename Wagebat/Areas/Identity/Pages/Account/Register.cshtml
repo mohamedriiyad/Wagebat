@@ -1,0 +1,53 @@
+﻿@page
+@model RegisterModel
+
+@{
+    Layout = "~/views/shared/_LoginLayout.cshtml";
+}
+
+
+<main class="login-body">
+    <!-- Login Admin -->
+    <form id="account" method="post">
+
+        <div class="login-form">
+
+            <h2>Register</h2>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-input">
+                <input asp-for="Input.Username" placeholder="User Name">
+                <span asp-validation-for="Input.Username" class="text-danger"></span>
+            </div>
+            <div class="form-input">
+                <input asp-for="Input.Email" placeholder="Email">
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-input">
+                <select class="form-select" style="display:block;" asp-for="Input.RoleId">
+                    <option value="0">Instructor</option>
+                    <option value="1">Student</option>
+                </select>
+                <span asp-validation-for="Input.RoleId" class="text-danger"></span>
+            </div>
+            <div class="form-input">
+                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                <input asp-for="Input.PhoneNumber" placeholder="Phone">
+            </div>
+            <div class="form-input">
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                <input asp-for="Input.Password" placeholder="Password">
+            </div>
+            <div class="form-input">
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                <input asp-for="Input.ConfirmPassword" placeholder="Confirm Password">
+            </div>
+            <div class="form-input pt-30">
+                <input type="submit" value="Register">
+            </div>
+            <span>Already have an acount? <a style="display:inline" asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="registration">Login</a></span>
+
+        </div>
+    </form>
+    <!-- /end login form -->
+</main>
+

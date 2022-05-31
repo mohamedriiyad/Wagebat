@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wagebat.Data;
 
 namespace Wagebat.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220531205650_AddCommentsTable")]
+    partial class AddCommentsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -583,26 +585,6 @@ namespace Wagebat.Data.Migrations
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("Wagebat.Models.TransactionAttachment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Path")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TransactionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TransactionId");
-
-                    b.ToTable("TransactionAttachments");
-                });
-
             modelBuilder.Entity("Wagebat.Models.University", b =>
                 {
                     b.Property<int>("Id")
@@ -885,17 +867,6 @@ namespace Wagebat.Data.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("Wagebat.Models.TransactionAttachment", b =>
-                {
-                    b.HasOne("Wagebat.Models.Transaction", "Transaction")
-                        .WithMany("TransactionAttachments")
-                        .HasForeignKey("TransactionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Transaction");
-                });
-
             modelBuilder.Entity("Wagebat.Models.Level", b =>
                 {
                     b.Navigation("Courses");
@@ -925,8 +896,6 @@ namespace Wagebat.Data.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Reviews");
-
-                    b.Navigation("TransactionAttachments");
                 });
 
             modelBuilder.Entity("Wagebat.Models.University", b =>

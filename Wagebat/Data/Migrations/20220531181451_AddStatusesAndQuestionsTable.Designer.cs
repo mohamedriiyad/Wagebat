@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wagebat.Data;
 
 namespace Wagebat.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220531181451_AddStatusesAndQuestionsTable")]
+    partial class AddStatusesAndQuestionsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,7 +72,7 @@ namespace Wagebat.Data.Migrations
                     b.ToTable("AspNetRoleClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -80,10 +82,6 @@ namespace Wagebat.Data.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -137,11 +135,9 @@ namespace Wagebat.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.ApplicationUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -165,7 +161,7 @@ namespace Wagebat.Data.Migrations
                     b.ToTable("AspNetUserClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.ApplicationUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
@@ -189,7 +185,7 @@ namespace Wagebat.Data.Migrations
                     b.ToTable("AspNetUserLogins");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.ApplicationUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -204,7 +200,7 @@ namespace Wagebat.Data.Migrations
                     b.ToTable("AspNetUserRoles");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.ApplicationUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -255,34 +251,6 @@ namespace Wagebat.Data.Migrations
                     b.ToTable("CategoryCourses");
                 });
 
-            modelBuilder.Entity("Wagebat.Models.Comment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Body")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TransactionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TransactionId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Comments");
-                });
-
             modelBuilder.Entity("Wagebat.Models.Course", b =>
                 {
                     b.Property<int>("Id")
@@ -324,21 +292,6 @@ namespace Wagebat.Data.Migrations
                     b.HasIndex("PackageId");
 
                     b.ToTable("CoursePackages");
-                });
-
-            modelBuilder.Entity("Wagebat.Models.InstructorCourse", b =>
-                {
-                    b.Property<string>("InstuctorId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.HasKey("InstuctorId", "CourseId");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("InstructorCourses");
                 });
 
             modelBuilder.Entity("Wagebat.Models.Item", b =>
@@ -448,57 +401,6 @@ namespace Wagebat.Data.Migrations
                     b.ToTable("Questions");
                 });
 
-            modelBuilder.Entity("Wagebat.Models.QuestionAttachment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Path")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("QuestionAttachments");
-                });
-
-            modelBuilder.Entity("Wagebat.Models.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<byte>("Liked")
-                        .HasColumnType("tinyint");
-
-                    b.Property<int>("TransactionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TransactionId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Reviews");
-                });
-
             modelBuilder.Entity("Wagebat.Models.Status", b =>
                 {
                     b.Property<int>("Id")
@@ -512,95 +414,6 @@ namespace Wagebat.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Statuses");
-                });
-
-            modelBuilder.Entity("Wagebat.Models.Subscription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ConfirmerId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PackageId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConfirmerId");
-
-                    b.HasIndex("PackageId");
-
-                    b.HasIndex("StatusId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Subscriptions");
-                });
-
-            modelBuilder.Entity("Wagebat.Models.Transaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AcceptedBy")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Answer")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("AnswerDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AcceptedBy");
-
-                    b.HasIndex("QuestionId");
-
-                    b.HasIndex("StatusId");
-
-                    b.ToTable("Transactions");
-                });
-
-            modelBuilder.Entity("Wagebat.Models.TransactionAttachment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Path")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TransactionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TransactionId");
-
-                    b.ToTable("TransactionAttachments");
                 });
 
             modelBuilder.Entity("Wagebat.Models.University", b =>
@@ -618,13 +431,6 @@ namespace Wagebat.Data.Migrations
                     b.ToTable("Universities");
                 });
 
-            modelBuilder.Entity("Wagebat.Models.ApplicationUser", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.HasDiscriminator().HasValue("ApplicationUser");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -634,25 +440,25 @@ namespace Wagebat.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.ApplicationUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.ApplicationUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.ApplicationUserRole<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
@@ -660,16 +466,16 @@ namespace Wagebat.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.ApplicationUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -693,23 +499,6 @@ namespace Wagebat.Data.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Course");
-                });
-
-            modelBuilder.Entity("Wagebat.Models.Comment", b =>
-                {
-                    b.HasOne("Wagebat.Models.Transaction", "Transaction")
-                        .WithMany("Comments")
-                        .HasForeignKey("TransactionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Wagebat.Models.ApplicationUser", "User")
-                        .WithMany("Comments")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Transaction");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Wagebat.Models.Course", b =>
@@ -750,25 +539,6 @@ namespace Wagebat.Data.Migrations
                     b.Navigation("Package");
                 });
 
-            modelBuilder.Entity("Wagebat.Models.InstructorCourse", b =>
-                {
-                    b.HasOne("Wagebat.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Wagebat.Models.ApplicationUser", "Instructor")
-                        .WithMany()
-                        .HasForeignKey("InstuctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Instructor");
-                });
-
             modelBuilder.Entity("Wagebat.Models.PackageItem", b =>
                 {
                     b.HasOne("Wagebat.Models.Item", "Item")
@@ -799,152 +569,19 @@ namespace Wagebat.Data.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("Wagebat.Models.QuestionAttachment", b =>
-                {
-                    b.HasOne("Wagebat.Models.Question", "Question")
-                        .WithMany("QuestionAttachments")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Question");
-                });
-
-            modelBuilder.Entity("Wagebat.Models.Review", b =>
-                {
-                    b.HasOne("Wagebat.Models.Transaction", "Transaction")
-                        .WithMany("Reviews")
-                        .HasForeignKey("TransactionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Wagebat.Models.ApplicationUser", "User")
-                        .WithMany("Reviews")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Transaction");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Wagebat.Models.Subscription", b =>
-                {
-                    b.HasOne("Wagebat.Models.ApplicationUser", "Confirmer")
-                        .WithMany("Confirmations")
-                        .HasForeignKey("ConfirmerId");
-
-                    b.HasOne("Wagebat.Models.Package", "Package")
-                        .WithMany("Subscriptions")
-                        .HasForeignKey("PackageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Wagebat.Models.Status", "Status")
-                        .WithMany("Subscriptions")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Wagebat.Models.ApplicationUser", "User")
-                        .WithMany("Subscriptions")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Confirmer");
-
-                    b.Navigation("Package");
-
-                    b.Navigation("Status");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Wagebat.Models.Transaction", b =>
-                {
-                    b.HasOne("Wagebat.Models.ApplicationUser", "Acceptor")
-                        .WithMany("Transactions")
-                        .HasForeignKey("AcceptedBy");
-
-                    b.HasOne("Wagebat.Models.Question", "Question")
-                        .WithMany()
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Wagebat.Models.Status", "Status")
-                        .WithMany("Transactions")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Acceptor");
-
-                    b.Navigation("Question");
-
-                    b.Navigation("Status");
-                });
-
-            modelBuilder.Entity("Wagebat.Models.TransactionAttachment", b =>
-                {
-                    b.HasOne("Wagebat.Models.Transaction", "Transaction")
-                        .WithMany("TransactionAttachments")
-                        .HasForeignKey("TransactionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Transaction");
-                });
-
             modelBuilder.Entity("Wagebat.Models.Level", b =>
                 {
                     b.Navigation("Courses");
                 });
 
-            modelBuilder.Entity("Wagebat.Models.Package", b =>
-                {
-                    b.Navigation("Subscriptions");
-                });
-
-            modelBuilder.Entity("Wagebat.Models.Question", b =>
-                {
-                    b.Navigation("QuestionAttachments");
-                });
-
             modelBuilder.Entity("Wagebat.Models.Status", b =>
                 {
                     b.Navigation("Questions");
-
-                    b.Navigation("Subscriptions");
-
-                    b.Navigation("Transactions");
-                });
-
-            modelBuilder.Entity("Wagebat.Models.Transaction", b =>
-                {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Reviews");
-
-                    b.Navigation("TransactionAttachments");
                 });
 
             modelBuilder.Entity("Wagebat.Models.University", b =>
                 {
                     b.Navigation("Courses");
-                });
-
-            modelBuilder.Entity("Wagebat.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Confirmations");
-
-                    b.Navigation("Reviews");
-
-                    b.Navigation("Subscriptions");
-
-                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

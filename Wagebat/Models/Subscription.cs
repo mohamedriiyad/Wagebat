@@ -1,14 +1,25 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Wagebat.Models
 {
     public class Subscription
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
+        
+        [Required]
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
+        
+        [Required]
         public int PackageId { get; set; }
+        public Package Package { get; set; }
+        
+        [Required]
         public int StatusId { get; set; }
+        public Status Status { get; set; }
         public DateTime Date { get; set; }
-        public string ConfirmedBy { get; set; }
+        public string ConfirmerId { get; set; }
+        public ApplicationUser Confirmer { get; set; }
     }
 }

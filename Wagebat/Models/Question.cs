@@ -8,9 +8,11 @@ namespace Wagebat.Models
         public int Id { get; set; }
         public int CourseId { get; set; }
         public int SubscriptionId { get; set; }
+        public Subscription Subscription { get; set; }
         public int StatusId { get; set; }
         public Status Status { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
         public string Body { get; set; }
         public DateTime Date { get; set; }
         public ICollection<QuestionAttachment> QuestionAttachments { get; set; }

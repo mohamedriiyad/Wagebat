@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Wagebat.Models
@@ -21,5 +22,6 @@ namespace Wagebat.Models
         public DateTime Date { get; set; }
         public string ConfirmerId { get; set; }
         public ApplicationUser Confirmer { get; set; }
+        public ICollection<Question> Questions { get; set; }
     }
 }

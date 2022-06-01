@@ -1,6 +1,6 @@
 using System;
 
-namespace MoussaAnswers.Models
+namespace Wagebat.Models
 {
     public class ErrorViewModel
     {

@@ -107,6 +107,12 @@ namespace Wagebat.Data
                         ic.HasKey(prop => new { prop.InstuctorId, prop.CourseId });
                     }
                 );
+
+            builder.Entity<Question>()
+                .HasOne(q => q.Subscription)
+                .WithMany(s => s.Questions)
+                .HasForeignKey(q => q.SubscriptionId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

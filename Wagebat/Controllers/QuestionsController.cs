@@ -67,9 +67,9 @@ namespace Wagebat.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CourseId,SubscriptionId,StatusId,UserId,Body,Date")] Question question)
         {
-            var currentUser = _userManager.FindByNameAsync(User.Identity.Name);
+            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
             var iddd = currentUser.Id;
-            //var isSub = _context.Subscriptions.Include(s => s.User).Where(s => s.UserId == currentUser.Id).FirstOrDefault();
+            var isSub = _context.Subscriptions.Include(s => s.User).Where(s => s.UserId == currentUser.Id).FirstOrDefault();
 
             var currentDate = DateTime.Now.ToString();
             var currentQStatus = _context.Questions

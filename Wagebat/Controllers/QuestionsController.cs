@@ -68,20 +68,33 @@ namespace Wagebat.Controllers
         public async Task<IActionResult> Create([Bind("Id,CourseId,SubscriptionId,StatusId,UserId,Body,Date")] Question question)
         {
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
-            var iddd = currentUser.Id;
             var isSub = _context.Subscriptions.Include(s => s.User).Where(s => s.UserId == currentUser.Id).FirstOrDefault();
+            var currentDate = DateTime.Now;
+            
+            var currentQStatus = _context.Statuses
+                .Where(s => s.Id == 1).FirstOrDefaultAsync();
 
-            var currentDate = DateTime.Now.ToString();
-            var currentQStatus = _context.Questions
-                .Include(q => q.Status)
-                .Where(q => q.Status.Id == question.StatusId).FirstOrDefaultAsync();
-
-            if (ModelState.IsValid)
+            if (isSub == currentUser.Subscriptions)
             {
-                _context.Add(question);
+                Question newQuestion = new Question
+                {
+                    CourseId = question.CourseId,
+                    SubscriptionId = isSub.Id,
+                    Status = await currentQStatus,
+                    Body = question.Body,
+                    Date = currentDate
+                };
+                _context.Add(newQuestion);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            //if (ModelState.IsValid)
+            //{
+            //    _context.Add(question);
+            //    await _context.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
             ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Id", question.StatusId);
             ViewData["SubscriptionId"] = new SelectList(_context.Subscriptions, "Id", "UserId", question.SubscriptionId);
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", question.UserId);

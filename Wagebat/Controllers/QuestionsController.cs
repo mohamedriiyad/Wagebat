@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Wagebat.Data;
 using Wagebat.Models;
 
@@ -13,16 +13,20 @@ namespace Wagebat.Controllers
     public class QuestionsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public QuestionsController(ApplicationDbContext context)
+        public QuestionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Questions
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Questions.Include(q => q.Status).Include(q => q.Subscription).Include(q => q.User);
+            var applicationDbContext = _context.Questions.Include(q => q.Status)
+                .Include(q => q.Subscription)
+                .Include(q => q.User);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -63,6 +67,15 @@ namespace Wagebat.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CourseId,SubscriptionId,StatusId,UserId,Body,Date")] Question question)
         {
+            var currentUser = _userManager.FindByNameAsync(User.Identity.Name);
+            var iddd = currentUser.Id;
+            //var isSub = _context.Subscriptions.Include(s => s.User).Where(s => s.UserId == currentUser.Id).FirstOrDefault();
+
+            var currentDate = DateTime.Now.ToString();
+            var currentQStatus = _context.Questions
+                .Include(q => q.Status)
+                .Where(q => q.Status.Id == question.StatusId).FirstOrDefaultAsync();
+
             if (ModelState.IsValid)
             {
                 _context.Add(question);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +56,7 @@ namespace Wagebat.Controllers
         public IActionResult Create()
         {
             ViewData["StatusId"] = new SelectList(_context.Statuses, "Name", "Name");
+            ViewData["Courses"] = new SelectList(_context.Courses, "Id", "Name");
             ViewData["SubscriptionId"] = new SelectList(_context.Subscriptions, "Username", "Username");
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id");
             return View();
@@ -65,7 +67,8 @@ namespace Wagebat.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CourseId,SubscriptionId,StatusId,UserId,Body,Date")] Question question)
+        [Authorize]
+        public async Task<IActionResult> Create(Question question)
         {
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
             var isSub = _context.Subscriptions.Include(s => s.User).Where(s => s.UserId == currentUser.Id).FirstOrDefault();

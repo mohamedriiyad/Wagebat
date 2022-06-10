@@ -26,13 +26,23 @@
                         <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
 
                             <div class="portfolio-item filter-app">
-                                <div class="portfolio-img"><img src="~/assets/img/portfolio/portfolio-1.jpg" class="img-fluid" alt=""></div>
-                                <div class="portfolio-info">
-                                    <h4>App 1</h4>
-                                    <p>App</p>
-                                    <a href="~/assets/img/portfolio/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 1"><i class="bx bx-plus"></i></a>
-                                    <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-                                </div>
+                                @foreach (var item in Model.QuestionAttachments)
+                                {
+
+                                    <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
+
+                                        <div class="portfolio-item filter-app">
+                                            <div class="portfolio-img"><img src="@item.Path" class="img-fluid" alt=""></div>
+                                            <div class="portfolio-info">
+                                                <h4>App 1</h4>
+                                                <p>App</p>
+                                                <a href="@item.Path" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 1"><i class="bx bx-plus"></i></a>
+                                                <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
                             </div>
 
                         </div>
@@ -46,12 +56,12 @@
                 <div>
                     <hr />
                     <dl class="row">
-                        
+
                         <dt class="col-sm-2">
                             @Html.DisplayNameFor(model => model.Status)
                         </dt>
                         <dd class="col-sm-10">
-                            Answered
+                            @Html.DisplayFor(model => model.Status.Name)
                         </dd>
                         <dt class="col-sm-2">
                             @Html.DisplayNameFor(model => model.Body)
@@ -64,92 +74,76 @@
 
 
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-4">
-                <!-- ======= Portfolio Section ======= -->
-                <section id="portfolio" class="portfolio">
-                    <div class="container" data-aos="fade-up">
+            @if (Model.Status.Id != 1)
+            {
+                <div class="col-4">
 
-                        <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
+                    <!-- ======= Portfolio Section ======= -->
+                    <section id="portfolio" class="portfolio">
 
-                            <div class="portfolio-item filter-app">
-                                <div class="portfolio-img"><img src="~/assets/img/portfolio/portfolio-1.jpg" class="img-fluid" alt=""></div>
-                                <div class="portfolio-info">
-                                    <h4>App 1</h4>
-                                    <p>App</p>
-                                    <a href="~/assets/img/portfolio/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 1"><i class="bx bx-plus"></i></a>
-                                    <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+                        <div class="container" data-aos="fade-up">
+
+                            <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
+
+                                <div class="portfolio-item filter-app">
+                                    @foreach (var item in Model.QuestionAttachments)
+                                    {
+
+                                        <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
+
+                                            <div class="portfolio-item filter-app">
+                                                <div class="portfolio-img"><img src="@item.Path" class="img-fluid" alt=""></div>
+                                                <div class="portfolio-info">
+                                                    <h4>App 1</h4>
+                                                    <p>App</p>
+                                                    <a href="@item.Path" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 1"><i class="bx bx-plus"></i></a>
+                                                    <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    }
                                 </div>
+
                             </div>
 
                         </div>
+                    </section><!-- End Portfolio Section -->
 
+                </div>
+                <div class="col-8">
+                    <h1 style="padding-left: 0px;">Question</h1>
+                    <div>
+                        <hr />
+                        <dl class="row">
+
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.Status)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.Status.Name)
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.Body)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.Body)
+                            </dd>
+                        </dl>
                     </div>
-                </section><!-- End Portfolio Section -->
 
-            </div>
-            <div class="col-8">
-                <h1>Details</h1>
 
-                <div>
-                    <h4>Question</h4>
-                    <hr />
-                    <dl class="row">
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.CourseId)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.CourseId)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.Subscription)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.Subscription.UserId)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.Status)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.Status.Id)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.User)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.User.Id)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.Body)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.Body)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.Date)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.Date)
-                        </dd>
-                    </dl>
                 </div>
-                <div>
-                    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-                    <a asp-action="Index">Back to List</a>
-                </div>
-
-
-            </div>
+            }
         </div>
 
+        <div class="row">
+            <a href="#" class="buy-btn">Get Started</a>
+        </div>
 
 
 
 
     </div>
 </section><!-- End Frequently Asked Questions Section -->
-
-
-

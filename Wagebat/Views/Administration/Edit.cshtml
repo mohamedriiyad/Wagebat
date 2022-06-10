@@ -1,0 +1,71 @@
+﻿@model Wagebat.ViewModels.Users.UserEditVM
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-pen icon-gradient bg-happy-itmeo">
+                </i>
+            </div>
+            <div>
+                Manage your Account
+                <div class="page-title-subheading">
+
+                </div>
+            </div>
+        </div>
+        <div class="page-title-actions">
+
+            <div class="d-inline-block">
+                <p>
+                    <a asp-controller="Administration" asp-action="Index" class="btn btn-primary">Back to List</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row clearfix">
+    <div class="col-lg-6" style="margin: 6px auto;">
+
+        <div class="card">
+            <div class="body">
+                <form method="post" id="reg_form" class="form-horizontal">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input asp-for="@Model.Email" class="form-control shape" required placeholder="User name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input asp-for="@Model.PhoneNumber" class="form-control shape" required placeholder="Phone Number">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input asp-for="@Model.NewPassword" class="form-control shape" required placeholder="New password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input asp-for="@Model.ConfirmPassword" class="form-control shape" required placeholder="Confirm Password">
+                        </div>
+                    </div>
+
+
+                    <div class="clearfix"></div>
+                    <div class="form-input margin-top-20 clearfix">
+                        <input style="margin: 10px auto; display: block;" type="submit" class="btn btn-primary" value="Reset">
+                    </div>
+                </form>
+            </div>
+            @section Scripts {
+                <partial name="_ValidationScriptsPartial" />
+            }
+        </div>
+    </div>
+</div>

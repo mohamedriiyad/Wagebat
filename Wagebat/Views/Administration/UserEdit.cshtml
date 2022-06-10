@@ -1,0 +1,47 @@
+﻿@model Wagebat.ViewModels.Users.UserSelfEditVM
+
+@{
+    Layout = "~/views/shared/_LoginLayout.cshtml";
+}
+
+
+
+<main class="login-body">
+    <!-- Login Admin -->
+    <form id="account" method="post">
+
+        <div class="login-form">
+            <!-- logo-login -->
+            @*<div class="logo-login">
+                    <a href="index.html"><img src="~/assets/img/logo/loder.png" alt=""></a>
+                </div>*@
+            <h2>Edit your INFO</h2>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-input">
+                <input asp-for="@Model.Email" placeholder="Email">
+                <span asp-validation-for="@Model.Email" class="text-danger"></span>
+            </div>
+            <div class="form-input">
+                <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+                <input asp-for="@Model.PhoneNumber" placeholder="Phone">
+            </div>
+            <div class="form-input">
+                <span asp-validation-for="@Model.OldPassword" class="text-danger"></span>
+                <input asp-for="@Model.OldPassword" placeholder="Current Password">
+            </div>
+            <div class="form-input">
+                <span asp-validation-for="@Model.NewPassword" class="text-danger"></span>
+                <input asp-for="@Model.NewPassword" placeholder="New Password">
+            </div>
+            <div class="form-input">
+                <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
+                <input asp-for="@Model.ConfirmPassword" placeholder="Confirm Password">
+            </div>
+            <div class="form-input pt-30">
+                <input type="submit" value="Reset">
+            </div>
+        </div>
+    </form>
+    <!-- /end login form -->
+</main>
+

@@ -16,7 +16,6 @@ namespace Wagebat.Models
         [Required]
         public string Body { get; set; }
         public int CourseId { get; set; }
-        public Course Course { get; set; }
         public int SubscriptionId { get; set; }
         public Subscription Subscription { get; set; }
         public int StatusId { get; set; }

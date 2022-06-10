@@ -238,6 +238,16 @@
                                             Courses List
                                         </a>
                                     </li>
+                                    @if (User.IsInRole("instructor"))
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("CreateCourse","Administration")">
+                                                <i class="metismenu-icon pe-7s-users">
+                                                </i>
+                                                Add Course to Instructor
+                                            </a>
+                                        </li>
+                                    }
                                 </ul>
                             </li>
                             <li>
@@ -254,7 +264,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="@Url.Action("Index","Courses")">
+                                        <a href="@Url.Action("Index","Levels")">
                                             <i class="metismenu-icon pe-7s-users">
                                             </i>
                                             Levels List

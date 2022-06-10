@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Wagebat.Models.Question>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var counter = 1;
+}
+
+<!-- ======= Frequently Asked Questions Section ======= -->
+<section id="faq" class="faq section-bg" style="margin-top: 74px">
+    <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+            <h2>Frequently Asked Questions</h2>
+            <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+        </div>
+
+        <div class="faq-list">
+            <ul>
+                @foreach (var item in Model)
+                {
+                    
+                    <li data-aos="fade-up" data-aos-delay="200">
+                        <i class="bx bx-help-circle icon-help"></i>
+                        <a data-bs-toggle="collapse" data-bs-target="#faq-list-@item.Id" class="collapsed">
+                            @Html.Raw(item.Body)
+                            <i class="bx icon-show" style="margin-right: 75px">@item.Status.Name</i>
+                            <i class="bx bx-chevron-down icon-show"></i>
+
+                            <i class="bx icon-close" style="margin-right: 75px">@item.Status.Name</i>
+                            <i class="bx bx-chevron-up icon-close"></i>
+                        </a>
+                        <div id="faq-list-@item.Id" class="collapse" data-bs-parent=".faq-list">
+                            <p>
+                                Hollo
+                            </p>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+
+    </div>
+</section><!-- End Frequently Asked Questions Section -->

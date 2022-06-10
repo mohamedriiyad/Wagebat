@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Wagebat.Data;
+using Wagebat.Helpers;
 using Wagebat.Models;
 
 namespace Wagebat.Controllers
@@ -13,10 +18,12 @@ namespace Wagebat.Controllers
     public class TransactionsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public TransactionsController(ApplicationDbContext context)
+        public TransactionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Transactions
@@ -48,12 +55,11 @@ namespace Wagebat.Controllers
         }
 
         // GET: Transactions/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
-            ViewData["AcceptedBy"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id");
-            ViewData["QuestionId"] = new SelectList(_context.Questions, "Id", "Id");
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Id");
-            return View();
+            ViewData["ShowMessage"] = false;
+            var transaction = new Transaction { QuestionId = id };
+            return View(transaction);
         }
 
         // POST: Transactions/Create
@@ -61,18 +67,49 @@ namespace Wagebat.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,QuestionId,AcceptedBy,Answer,AnswerDate,StatusId")] Transaction transaction)
+        public async Task<IActionResult> Create(Transaction transaction, List<IFormFile> files)
         {
-            if (ModelState.IsValid)
+            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (transaction.Answer == null || !ModelState.IsValid)
             {
-                _context.Add(transaction);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (transaction.Answer == null)
+                    ModelState.AddModelError(string.Empty, "Answer field is Required!");
+                ViewData["ShowMessage"] = false;
+                return View(transaction);
             }
-            ViewData["AcceptedBy"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", transaction.AcceptedBy);
-            ViewData["QuestionId"] = new SelectList(_context.Questions, "Id", "Id", transaction.QuestionId);
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Id", transaction.StatusId);
-            return View(transaction);
+
+            List<string> attatchments = new List<string>();
+            if (files.Count > 0)
+            {
+                var pathToSave = Path.Combine("images", "answers");
+                try
+                {
+                    attatchments = await FileHelper.UploadAll(files, pathToSave);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest("There is somthing wrong when adding the attachments!");
+                }
+            }
+
+            var newTransaction = new Transaction
+            {
+                Answer = transaction.Answer,
+                QuestionId = transaction.QuestionId,
+                AcceptedBy = currentUser.Id,
+                StatusId = 2,
+                AnswerDate = DateTime.Now
+            };
+            newTransaction.Answer = WebUtility.HtmlEncode(transaction.Answer);
+            foreach (var attatchment in attatchments)
+            {
+                newTransaction.TransactionAttachments.Add(new TransactionAttachment { Path = attatchment });
+            }
+
+            ViewData["ShowMessage"] = true;
+            _context.Add(newTransaction);
+            await _context.SaveChangesAsync();
+            return View(newTransaction);
         }
 
         // GET: Transactions/Edit/5

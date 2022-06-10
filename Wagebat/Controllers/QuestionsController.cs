@@ -70,6 +70,21 @@ namespace Wagebat.Controllers
             return View(questions);
         }
 
+        public async Task<IActionResult> InstructorIndex()
+        {
+            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var questions = await _context.Questions.Include(q => q.Status)
+                .Include(q => q.Subscription)
+                .Include(q => q.User)
+                .Where(q => q.UserId == currentUser.Id).ToListAsync();
+            foreach (var item in questions)
+            {
+                item.Body = WebUtility.HtmlDecode(item.Body);
+            }
+            return View(questions);
+        }
+
 
         // GET: Questions/Details/5
         public async Task<IActionResult> Details(int? id)

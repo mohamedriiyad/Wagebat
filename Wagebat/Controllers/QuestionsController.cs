@@ -56,13 +56,13 @@ namespace Wagebat.Controllers
         public async Task<IActionResult> InstructorIndex()
         {
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
-
+            var ids = _context.ApplicationUsers.SelectMany(u => u.Courses.Select(c => c.Id)).ToList();
             var questions = await _context.Questions
                 .Include(q => q.Status)
                 .Include(q => q.Subscription)
                 .Include(q => q.User)
                 .ThenInclude(u => u.Courses)
-                .Where(q => q.User.Courses.Any(c => c.Id == q.CourseId)).ToListAsync();
+                .Where(q => ids.Any(id => id == q.CourseId)).ToListAsync();
             foreach (var item in questions)
             {
                 item.Body = WebUtility.HtmlDecode(item.Body);

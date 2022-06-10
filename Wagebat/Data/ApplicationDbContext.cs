@@ -15,6 +15,7 @@ namespace Wagebat.Data
         }
 
         public DbSet<Course> Courses { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<CategoryCourse> CategoryCourses { get; set; }
         public DbSet<Level> Levels { get; set; }

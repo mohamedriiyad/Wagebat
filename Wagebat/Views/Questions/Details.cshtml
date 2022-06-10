@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var counter = 0;
 }
 
 <!-- ======= Frequently Asked Questions Section ======= -->
@@ -28,19 +29,37 @@
                             <div class="portfolio-item filter-app">
                                 @foreach (var item in Model.QuestionAttachments)
                                 {
+                                    if (counter++ == 0)
+                                    {
+                                        <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
 
-                                    <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
-
-                                        <div class="portfolio-item filter-app">
-                                            <div class="portfolio-img"><img src="@item.Path" class="img-fluid" alt=""></div>
-                                            <div class="portfolio-info">
-                                                <h4>App 1</h4>
-                                                <p>App</p>
-                                                <a href="@item.Path" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 1"><i class="bx bx-plus"></i></a>
-                                                <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+                                            <div class="portfolio-item filter-app">
+                                                <div class="portfolio-img"><img src="@item.Path" class="img-fluid" alt=""></div>
+                                                <div class="portfolio-info">
+                                                    <h4>App 1</h4>
+                                                    <p>App</p>
+                                                    <a href="@item.Path" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 1"><i class="bx bx-plus"></i></a>
+                                                    <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    }
+                                    else
+                                    {
+                                        <div style="display:none;" class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
+
+                                            <div class="portfolio-item filter-app">
+                                                <div class="portfolio-img"><img src="@item.Path" class="img-fluid" alt=""></div>
+                                                <div class="portfolio-info">
+                                                    <h4>App 1</h4>
+                                                    <p>App</p>
+                                                    <a href="@item.Path" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 1"><i class="bx bx-plus"></i></a>
+                                                    <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
 
                                 }
                             </div>

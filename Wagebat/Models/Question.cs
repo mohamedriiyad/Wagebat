@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Wagebat.Models
 {
     public class Question
     {
+        public Question()
+        {
+            QuestionAttachments = new Collection<QuestionAttachment>();
+        }
         public int Id { get; set; }
 
         [Required]

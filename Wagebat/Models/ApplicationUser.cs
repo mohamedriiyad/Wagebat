@@ -14,5 +14,6 @@ namespace Wagebat.Models
         public ICollection<Course> Courses { get; set; }
         public ICollection<Review> Reviews { get; set; }
         public ICollection<Comment> Comments { get; set; }
+        public ICollection<Question> Questions { get; set; }
     }
 }

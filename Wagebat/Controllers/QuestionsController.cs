@@ -79,12 +79,8 @@ namespace Wagebat.Controllers
         // GET: Questions/Create
         public IActionResult Create()
         {
-
             ViewData["ShowMessage"] = false;
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Name", "Name");
             ViewData["Courses"] = new SelectList(_context.Courses, "Id", "Name");
-            ViewData["SubscriptionId"] = new SelectList(_context.Subscriptions, "Username", "Username");
-            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id");
             return View();
         }
 
@@ -97,18 +93,18 @@ namespace Wagebat.Controllers
         {
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
             var userSubscription = _context.Subscriptions
-                .Where(s => s.UserId == currentUser.Id && s.Questions.Count < s.Package.QuestionsCount)
+                .Where(s => s.UserId == currentUser.Id && s.User.Questions.Count < s.Package.QuestionsCount)
                 .FirstOrDefault();
-            if (userSubscription == null || !ModelState.IsValid)
+            if (userSubscription == null || question.Body == null)
             {
                 if (userSubscription == null)
                     ModelState.AddModelError(string.Empty, "Sorry, You don't have any subscriptions Yet!");
 
-                ModelState.AddModelError(string.Empty, "Question field is Required!");
+                if (question.Body == null)
+                    ModelState.AddModelError(string.Empty, "Question field is Required!");
+
+                ViewData["Courses"] = new SelectList(_context.Courses, "Id", "Name");
                 ViewData["ShowMessage"] = false;
-                ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Id", question.StatusId);
-                ViewData["SubscriptionId"] = new SelectList(_context.Subscriptions, "Id", "UserId", question.SubscriptionId);
-                ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", question.UserId);
                 return View(question);
             }
 
@@ -140,6 +136,7 @@ namespace Wagebat.Controllers
             await _context.SaveChangesAsync();
 
             ViewData["ShowMessage"] = true;
+            ViewData["Courses"] = new SelectList(_context.Courses, "Id", "Name");
             return View();
         }
 

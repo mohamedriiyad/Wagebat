@@ -1,12 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Wagebat.Data;
+using Wagebat.Helpers;
 using Wagebat.Models;
 
 namespace Wagebat.Controllers
@@ -16,7 +21,8 @@ namespace Wagebat.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public QuestionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public QuestionsController(ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -55,6 +61,7 @@ namespace Wagebat.Controllers
         // GET: Questions/Create
         public IActionResult Create()
         {
+            ViewData["ShowMessage"] = false;
             ViewData["StatusId"] = new SelectList(_context.Statuses, "Name", "Name");
             ViewData["Courses"] = new SelectList(_context.Courses, "Id", "Name");
             ViewData["SubscriptionId"] = new SelectList(_context.Subscriptions, "Username", "Username");
@@ -67,41 +74,53 @@ namespace Wagebat.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> Create(Question question)
+        public async Task<IActionResult> Create(Question question, List<IFormFile> files)
         {
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
-            var isSub = _context.Subscriptions.Include(s => s.User).Where(s => s.UserId == currentUser.Id).FirstOrDefault();
-            var currentDate = DateTime.Now;
-            
-            var currentQStatus = _context.Statuses
-                .Where(s => s.Id == 1).FirstOrDefaultAsync();
-
-            if (isSub == currentUser.Subscriptions)
+            var userSubscription = _context.Subscriptions
+                .Where(s => s.UserId == currentUser.Id && s.Questions.Count < s.Package.QuestionsCount)
+                .FirstOrDefault();
+            if (userSubscription == null || !ModelState.IsValid)
             {
-                Question newQuestion = new Question
-                {
-                    CourseId = question.CourseId,
-                    SubscriptionId = isSub.Id,
-                    Status = await currentQStatus,
-                    Body = question.Body,
-                    Date = currentDate
-                };
-                _context.Add(newQuestion);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (userSubscription == null)
+                    ModelState.AddModelError(string.Empty, "Sorry, You don't have any subscriptions Yet!");
+
+                ModelState.AddModelError(string.Empty, "Question field is Required!");
+                ViewData["ShowMessage"] = false;
+                ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Id", question.StatusId);
+                ViewData["SubscriptionId"] = new SelectList(_context.Subscriptions, "Id", "UserId", question.SubscriptionId);
+                ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", question.UserId);
+                return View(question);
             }
 
-            //if (ModelState.IsValid)
-            //{
-            //    _context.Add(question);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Id", question.StatusId);
-            ViewData["SubscriptionId"] = new SelectList(_context.Subscriptions, "Id", "UserId", question.SubscriptionId);
-            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", question.UserId);
-            return View(question);
+            var pathToSave = Path.Combine("images", "questions");
+            List<string> attatchments;
+            try
+            {
+                attatchments = await FileHelper.UploadAll(files, pathToSave);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("You are tying to add a blog without an IMAGE!");
+            }
+
+            Question newQuestion = new Question
+            {
+                CourseId = question.CourseId,
+                SubscriptionId = userSubscription.Id,
+                Status = await _context.Statuses.FirstOrDefaultAsync(),
+                Date = DateTime.Now
+            };
+            newQuestion.Body = WebUtility.HtmlEncode(question.Body);
+            foreach(var attatchment in attatchments)
+            {
+                newQuestion.QuestionAttachments.Add(new QuestionAttachment { Path = attatchment });
+            }
+            _context.Add(newQuestion);
+            await _context.SaveChangesAsync();
+
+            ViewData["ShowMessage"] = true;
+            return View();
         }
 
         // GET: Questions/Edit/5

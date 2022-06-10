@@ -6,7 +6,6 @@ namespace Wagebat.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Value { get; set; }
-        public ICollection<Package> Packages { get; set; }
+        public ICollection<PackageItem> PackageItems { get; set; }
     }
 }

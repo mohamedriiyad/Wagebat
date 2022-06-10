@@ -1047,11 +1047,13 @@ section {
   margin-bottom: 15px;
   font-size: 20px;
   color: #37517e;
+  text-align: center;
 }
 .pricing h4 {
   font-size: 48px;
   color: #37517e;
   font-weight: 400;
+  text-align: center;
   font-family: "Jost", sans-serif;
   margin-bottom: 25px;
 }
@@ -1067,7 +1069,7 @@ section {
   padding: 20px 0;
   list-style: none;
   color: #999;
-  text-align: left;
+  text-align: center;
   line-height: 20px;
 }
 .pricing ul li {
@@ -1091,16 +1093,16 @@ section {
   text-decoration: line-through;
 }
 .pricing .buy-btn {
-  display: inline-block;
-  padding: 12px 35px;
-  border-radius: 50px;
-  color: #47b2e4;
-  transition: none;
-  font-size: 16px;
-  font-weight: 500;
-  font-family: "Jost", sans-serif;
-  transition: 0.3s;
-  border: 1px solid #47b2e4;
+    display: inline-block;
+    padding: 12px 35px;
+    border-radius: 50px;
+    color: #47b2e4;
+    transition: none;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: "Jost", sans-serif;
+    transition: 0.3s;
+    border: 1px solid #47b2e4;
 }
 .pricing .buy-btn:hover {
   background: #47b2e4;

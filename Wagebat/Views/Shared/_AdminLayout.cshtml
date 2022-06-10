@@ -25,7 +25,7 @@
                 }
                 else
                 {
-                    <a style="margin-left: -2px;" href="@Url.Action("RenterIndex", "Cars")">
+                    <a style="margin-left: -2px;" href="@Url.Action("AdminIndex", "Packages")">
                         <div class="" style=" margin-top: -11px; font-size: 31px; font-style: italic; font-variant-caps: all-small-caps; font-weight: 600;">Wa<span style="color:#4a68d5">Gebat</span></div>
                     </a>
                 }
@@ -177,42 +177,156 @@
                             <li>
                                 <a href="#">
                                     <i class="metismenu-icon fas pe-7s-car"></i>
-                                    Cars
+                                    Packages
                                     <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                                 </a>
                                 <ul>
                                     <li>
-                                        <a href="@Url.Action("Create","Cars")">
+                                        <a href="@Url.Action("Create","Packages")">
                                             <i class="metismenu-icon pe-7s-add-user"></i>
-                                            Add Car
+                                            Add Package
                                         </a>
                                     </li>
                                     <li>
-                                        @if (User.IsInRole("admin"))
-                                        {
-                                            <a href="@Url.Action("AdminIndex","Cars")">
-                                                <i class="metismenu-icon pe-7s-users">
-                                                </i>
-                                                Cars List
-                                            </a>
-                                        }
-                                        @if (User.IsInRole("renter"))
-                                        {
-                                            <a href="@Url.Action("RenterIndex","Cars")">
-                                                <i class="metismenu-icon pe-7s-users">
-                                                </i>
-                                                Cars List
-                                            </a>
-                                        }
-
+                                        <a href="@Url.Action("AdminIndex","Packages")">
+                                            <i class="metismenu-icon pe-7s-users">
+                                            </i>
+                                            Packages List
+                                        </a>
                                     </li>
                                 </ul>
                             </li>
                             <li>
-                                <a asp-controller="CarRents" asp-action="RentedCarsIndex">
+                                <a href="#">
                                     <i class="metismenu-icon fas pe-7s-cart " style=" opacity: 100%;"></i>
-                                    Rented Cars
+                                    Statuses
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                                 </a>
+                                <ul>
+                                    <li>
+                                        <a href="@Url.Action("Create","Status")">
+                                            <i class="metismenu-icon pe-7s-add-user"></i>
+                                            Add Status
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index","Status")">
+                                            <i class="metismenu-icon pe-7s-users">
+                                            </i>
+                                            Statuses List
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="metismenu-icon fas pe-7s-cart " style=" opacity: 100%;"></i>
+                                    Courses
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="@Url.Action("Create","Courses")">
+                                            <i class="metismenu-icon pe-7s-add-user"></i>
+                                            Add Course
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index","Courses")">
+                                            <i class="metismenu-icon pe-7s-users">
+                                            </i>
+                                            Courses List
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="metismenu-icon fas pe-7s-cart " style=" opacity: 100%;"></i>
+                                    Levels
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="@Url.Action("Create","Levels")">
+                                            <i class="metismenu-icon pe-7s-add-user"></i>
+                                            Add Level
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index","Courses")">
+                                            <i class="metismenu-icon pe-7s-users">
+                                            </i>
+                                            Levels List
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="metismenu-icon fas pe-7s-cart " style=" opacity: 100%;"></i>
+                                    Categories
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="@Url.Action("Create","Categories")">
+                                            <i class="metismenu-icon pe-7s-add-user"></i>
+                                            Add Category
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index","Categories")">
+                                            <i class="metismenu-icon pe-7s-users">
+                                            </i>
+                                            Categories List
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="metismenu-icon fas pe-7s-cart " style=" opacity: 100%;"></i>
+                                    Package Items
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="@Url.Action("Create","Items")">
+                                            <i class="metismenu-icon pe-7s-add-user"></i>
+                                            Add Item
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index","Items")">
+                                            <i class="metismenu-icon pe-7s-users">
+                                            </i>
+                                            Items List
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="metismenu-icon fas pe-7s-cart " style=" opacity: 100%;"></i>
+                                    Universities
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="@Url.Action("Create","Universities")">
+                                            <i class="metismenu-icon pe-7s-add-user"></i>
+                                            Add University
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index","Universities")">
+                                            <i class="metismenu-icon pe-7s-users">
+                                            </i>
+                                            Universities List
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                     </div>

@@ -1,10 +1,18 @@
 ﻿
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Wagebat.Models
 {
     public class Course
     {
+        public Course()
+        {
+            CategoryCourses = new Collection<CategoryCourse>();
+            CoursePackages = new Collection<CoursePackage>();
+            Instructors = new Collection<ApplicationUser>();
+        }
+
         public int Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
@@ -12,8 +20,8 @@ namespace Wagebat.Models
         public Level Level { get; set; }
         public int UniversityId { get; set; }
         public University University { get; set; }
-        public ICollection<Category> Categories { get; set; }
-        public ICollection<Package> Packages { get; set; }
-        public ICollection<ApplicationUser> Users { get; set; }
+        public ICollection<CategoryCourse> CategoryCourses { get; set; }
+        public ICollection<CoursePackage> CoursePackages { get; set; }
+        public ICollection<ApplicationUser> Instructors { get; set; }
     }
 }

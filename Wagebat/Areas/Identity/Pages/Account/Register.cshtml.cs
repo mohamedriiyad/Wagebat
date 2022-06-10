@@ -94,7 +94,7 @@ namespace Wagebat.Areas.Identity.Pages.Account
             {
                 string roleName;
                 if (Input.RoleId == 0)
-                    roleName = "renter";
+                    roleName = "instructor";
                 else
                     roleName = "user";
                 if (!await _roleManager.RoleExistsAsync(roleName))

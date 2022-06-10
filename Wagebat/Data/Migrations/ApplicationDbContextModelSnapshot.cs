@@ -351,9 +351,6 @@ namespace Wagebat.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Items");
@@ -409,7 +406,10 @@ namespace Wagebat.Data.Migrations
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
 
-                    b.HasKey("PackageId", "ItemId");
+                    b.Property<bool>("IsWith")
+                        .HasColumnType("bit");
+
+                    b.HasKey("PackageId", "ItemId", "IsWith");
 
                     b.HasIndex("ItemId");
 
@@ -424,6 +424,7 @@ namespace Wagebat.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Body")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CourseId")
@@ -683,13 +684,13 @@ namespace Wagebat.Data.Migrations
             modelBuilder.Entity("Wagebat.Models.CategoryCourse", b =>
                 {
                     b.HasOne("Wagebat.Models.Category", "Category")
-                        .WithMany()
+                        .WithMany("CategoryCourses")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Wagebat.Models.Course", "Course")
-                        .WithMany()
+                        .WithMany("CategoryCourses")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -738,13 +739,13 @@ namespace Wagebat.Data.Migrations
             modelBuilder.Entity("Wagebat.Models.CoursePackage", b =>
                 {
                     b.HasOne("Wagebat.Models.Course", "Course")
-                        .WithMany()
+                        .WithMany("CoursePackages")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Wagebat.Models.Package", "Package")
-                        .WithMany()
+                        .WithMany("CoursePackages")
                         .HasForeignKey("PackageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -776,13 +777,13 @@ namespace Wagebat.Data.Migrations
             modelBuilder.Entity("Wagebat.Models.PackageItem", b =>
                 {
                     b.HasOne("Wagebat.Models.Item", "Item")
-                        .WithMany()
+                        .WithMany("PackageItems")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Wagebat.Models.Package", "Package")
-                        .WithMany()
+                        .WithMany("PackageItems")
                         .HasForeignKey("PackageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -914,6 +915,23 @@ namespace Wagebat.Data.Migrations
                     b.Navigation("Transaction");
                 });
 
+            modelBuilder.Entity("Wagebat.Models.Category", b =>
+                {
+                    b.Navigation("CategoryCourses");
+                });
+
+            modelBuilder.Entity("Wagebat.Models.Course", b =>
+                {
+                    b.Navigation("CategoryCourses");
+
+                    b.Navigation("CoursePackages");
+                });
+
+            modelBuilder.Entity("Wagebat.Models.Item", b =>
+                {
+                    b.Navigation("PackageItems");
+                });
+
             modelBuilder.Entity("Wagebat.Models.Level", b =>
                 {
                     b.Navigation("Courses");
@@ -921,6 +939,10 @@ namespace Wagebat.Data.Migrations
 
             modelBuilder.Entity("Wagebat.Models.Package", b =>
                 {
+                    b.Navigation("CoursePackages");
+
+                    b.Navigation("PackageItems");
+
                     b.Navigation("Subscriptions");
                 });
 

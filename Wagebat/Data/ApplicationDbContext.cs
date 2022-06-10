@@ -37,41 +37,38 @@ namespace Wagebat.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<Course>()
-              .HasMany(left => left.Categories)
-              .WithMany(right => right.Courses)
-              .UsingEntity<CategoryCourse>(
-                cc => cc.HasOne(prop => prop.Category).WithMany().HasForeignKey(prop => prop.CategoryId),
-                cc => cc.HasOne(prop => prop.Course).WithMany().HasForeignKey(prop => prop.CourseId),
-                cc =>
-                    {
-                        cc.HasKey(prop => new { prop.CourseId, prop.CategoryId });
-                    }
-                );
 
-            builder.Entity<Course>()
-                .HasMany(left => left.Packages)
-                .WithMany(right => right.Courses)
-                .UsingEntity<CoursePackage>(
-                    cp => cp.HasOne(prop => prop.Package).WithMany().HasForeignKey(prop => prop.PackageId),
-                    cp => cp.HasOne(prop => prop.Course).WithMany().HasForeignKey(prop => prop.CourseId),
-                    cp =>
-                    {
-                        cp.HasKey(prop => new { prop.CourseId, prop.PackageId });
-                    }
-                );
+            builder.Entity<CategoryCourse>()
+                .HasKey(prop => new { prop.CourseId, prop.CategoryId });
+            builder.Entity<CategoryCourse>()
+                .HasOne(cs => cs.Course)
+                .WithMany(c => c.CategoryCourses);
+            builder.Entity<CategoryCourse>()
+                .HasOne(cs => cs.Category)
+                .WithMany(c => c.CategoryCourses);
 
-            builder.Entity<Package>()
-                .HasMany(left => left.Items)
-                .WithMany(right => right.Packages)
-                .UsingEntity<PackageItem>(
-                    pi => pi.HasOne(prop => prop.Item).WithMany().HasForeignKey(prop => prop.ItemId),
-                    pi => pi.HasOne(prop => prop.Package).WithMany().HasForeignKey(prop => prop.PackageId),
-                    pi =>
-                    {
-                        pi.HasKey(prop => new { prop.PackageId, prop.ItemId });
-                    }
-                );
+
+            builder.Entity<CoursePackage>()
+                .HasKey(prop => new { prop.CourseId, prop.PackageId });
+            builder.Entity<CoursePackage>()
+                .HasOne(cs => cs.Course)
+                .WithMany(c => c.CoursePackages);
+            builder.Entity<CoursePackage>()
+                .HasOne(cs => cs.Package)
+                .WithMany(c => c.CoursePackages);
+
+
+            builder.Entity<PackageItem>()
+                .HasKey(pi => new { pi.PackageId, pi.ItemId, pi.IsWith });
+
+            builder.Entity<PackageItem>()
+                .HasOne(left => left.Item)
+                .WithMany(right => right.PackageItems)
+                .HasForeignKey(pi => pi.ItemId);
+            builder.Entity<PackageItem>()
+                .HasOne(left => left.Package)
+                .WithMany(right => right.PackageItems)
+                .HasForeignKey(pi => pi.PackageId);
 
             builder.Entity<Subscription>()
                 .HasOne(s => s.User)
@@ -97,7 +94,7 @@ namespace Wagebat.Data
 
 
             builder.Entity<Course>()
-                .HasMany(left => left.Users)
+                .HasMany(left => left.Instructors)
                 .WithMany(right => right.Courses)
                 .UsingEntity<InstructorCourse>(
                     ic => ic.HasOne(prop => prop.Instructor).WithMany().HasForeignKey(prop => prop.InstuctorId),

@@ -1,0 +1,85 @@
+﻿@model Wagebat.ViewModels.CourseInput
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-add-user icon-gradient bg-happy-itmeo">
+                </i>
+            </div>
+            <div>
+                Create new Course
+                <div class="page-title-subheading">
+
+                </div>
+            </div>
+        </div>
+        <div class="page-title-actions">
+
+            <div class="d-inline-block">
+                <p>
+                    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-lg-6" style="margin: 6px auto;">
+
+        <div class="card">
+            <div class="body">
+                <form asp-action="Create" class="form-horizontal">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div style="margin-top:25px" class="form-group">
+                        <div class="col-md-12">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input required asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div style="margin-top:25px" class="form-group">
+                        <div class="col-md-12">
+                            <label asp-for="Code" class="control-label"></label>
+                            <input required asp-for="Code" class="form-control" />
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div style="margin-top:25px" class="form-group">
+                        <div class="col-md-12">
+                            <label class="control-label">Level</label>
+                            <select required asp-for="LevelId" class="form-control" asp-items="ViewBag.Levels"></select>
+                        </div>
+                    </div>
+                    <div style="margin-top:25px" class="form-group">
+                        <div class="col-md-12">
+                            <label class="control-label">University</label>
+                            <select required asp-for="UniversityId" class="form-control" asp-items="ViewBag.Universitys"></select>
+                        </div>
+                    </div>
+                    <div style="margin-top:25px" class="form-group">
+                        <div class="col-md-12">
+                            <label class="control-label">Categories</label>
+                            <select required asp-for="CategoriesIds" class="form-control" asp-items="ViewBag.Categories"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12" style="text-align: center;">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,7 +1,8 @@
-﻿@model Wagebat.Models.Package
+﻿@model Wagebat.ViewModels.PackageInput
 
 @{
     ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <h1>Edit</h1>
@@ -37,6 +38,27 @@
                 <label asp-for="QuestionsCount" class="control-label"></label>
                 <input asp-for="QuestionsCount" class="form-control" />
                 <span asp-validation-for="QuestionsCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WithItemsIds" class="control-label">With items</label>
+                <select asp-for="WithItemsIds" class="form-control" asp-items="ViewBag.Items">
+                    <option disabled selected value="0">-- Please Select Items --</option>
+                </select>
+                <span asp-validation-for="WithItemsIds" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WithoutItemsIds" class="control-label">Without items</label>
+                <select asp-for="WithoutItemsIds" class="form-control" asp-items="ViewBag.Items">
+                    <option disabled selected value="0">-- Please Select Items --</option>
+                </select>
+                <span asp-validation-for="WithoutItemsIds" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CoursesIds" class="control-label">Courses</label>
+                <select asp-for="CoursesIds" class="form-control" asp-items="ViewBag.Courses">
+                    <option disabled selected value="0">-- Please Select Courses --</option>
+                </select>
+                <span asp-validation-for="CoursesIds" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

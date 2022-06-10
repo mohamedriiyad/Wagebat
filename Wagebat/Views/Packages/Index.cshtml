@@ -4,56 +4,54 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<!-- ======= Pricing Section ======= -->
+<section id="pricing" class="pricing breadcrumbs">
+    <div class="container" data-aos="fade-up">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PriceBefore)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PriceAfter)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.QuestionsCount)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PriceBefore)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PriceAfter)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuestionsCount)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        <div class="section-title">
+            <h2>Pricing</h2>
+            <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+        </div>
+
+        <div class="row">
+            @foreach (var package in Model)
+            {
+            <div class="col-lg-4 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="200">
+                <div class="box featured">
+                    <h3>@package.Name</h3>
+                    <h4>
+                        @if (package.PriceBefore > 0)
+                        {
+                            <p style="text-decoration:line-through; display:inline">@package.PriceBefore</p>
+                            <sup> - </sup>
+                        }
+                        @package.PriceAfter<sup> LE</sup><span>@package.Description</span>
+                    </h4>
+                    <ul>
+                        @foreach (var item in package.PackageItems)
+                        {
+                            if (item.IsWith)
+                            {
+                                <li><i class="bx bx-check"></i> @item.Item.Name</li>
+                            }
+                        }
+
+                        @foreach (var item in package.PackageItems)
+                        {
+                            if (!item.IsWith)
+                            {
+                                <li class="na"><i class="bx bx-x"></i> <span>@item.Item.Name</span></li>
+                            }
+                        }
+                    </ul>
+                    <div style=" text-align: center;">
+                        <a asp-action="Create" asp-controller="Subscriptions" asp-route-id="@package.Id" class="buy-btn">Get Started</a>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+
+    </div>
+</section><!-- End Pricing Section -->
+

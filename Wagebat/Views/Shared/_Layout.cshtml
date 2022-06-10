@@ -58,7 +58,7 @@
                     <li><a class="nav-link scrollto" id="privacy" asp-controller="Home" asp-action="Privacy">About</a></li>
                     <li><a class="nav-link scrollto" href="#services">Search</a></li>
                     <li><a class="nav-link scrollto" asp-action="Create" asp-controller="Questions">Ask</a></li>
-                    <li><a class="nav-link scrollto" href="#portfolio">Ask</a></li>
+                    <li><a class="nav-link scrollto" asp-action="Index" asp-controller="Packages">Pricing</a></li>
                     <li><a class="nav-link scrollto" href="#portfolio">Ask</a></li>
                     <li><a class="nav-link scrollto" href="#portfolio">Ask</a></li>
                     <li class="dropdown">
@@ -69,6 +69,11 @@
                             <li><a href="#">Package 3</a></li>
                         </ul>
                     </li>
+
+                    @if (User.IsInRole("admin"))
+                    {
+                        <li><a class="nav-link scrollto" asp-action="Index" asp-controller="Administration">Admin</a></li>
+                    }
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li><a class="getstarted scrollto" asp-area="Identity" asp-page="/Account/Logout">Logout</a></li>

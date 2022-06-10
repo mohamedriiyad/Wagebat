@@ -13,39 +13,45 @@
     <div class="container" data-aos="fade-up">
 
         <div class="section-title">
-            <h2>Contact</h2>
-            <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+            <h2>Ask a Question NOW!!</h2>
+            <p>Ask your question now and you will be notified when our Experts ANSWER it.</p>
         </div>
 
         <div class="row">
             <div class="col-lg-7 mt-5 mt-lg-0 d-flex align-items-stretch" style="margin-left: auto; margin-right: auto;">
-                <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+                <form asp-action="Create" method="post" role="form" class="php-email-form"enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @if (ViewBag.ShowMessage)
+                    {
+                        <div class="my-3">
+                            <div class="loading">Loading</div>
+                            <div class="error-message"></div>
+                            <div class="sent-message d-block">Your message has been sent. Thank you!</div>
+                        </div>
+                    }
                     @*<div class="row">
-                        <div class="form-group col-md-6">
-                            <label for="name">Your Name</label>
-                            <input type="text" name="name" class="form-control" id="name" required>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="name">Your Email</label>
-                            <input type="email" class="form-control" name="email" id="email" required>
-                        </div>
-                    </div>*@
+            <div class="form-group col-md-6">
+                <label for="name">Your Name</label>
+                <input type="text" name="name" class="form-control" id="name" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="name">Your Email</label>
+                <input type="email" class="form-control" name="email" id="email" required>
+            </div>
+        </div>*@
                     <div class="form-group">
                         <label for="name">Course</label>
-                        <select asp-for="CourseId" class="form-control" asp-items="ViewBag.Courses"></select>
+                        <select asp-for="CourseId" class="form-control" asp-items="ViewBag.Courses">
+                            <option value="0">Select</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="name">Attachments</label>
-                        <input type="file" multiple class="form-control" name="email" id="email" required>
+                        <input type="file" multiple class="form-control" name="files">
                     </div>
                     <div class="form-group">
                         <label for="name">Question</label>
-                        <textarea id="BlogEn" class="form-control" name="message" rows="10" required></textarea>
-                    </div>
-                    <div class="my-3">
-                        <div class="loading">Loading</div>
-                        <div class="error-message"></div>
-                        <div class="sent-message">Your message has been sent. Thank you!</div>
+                        <textarea asp-for="Body" class="form-control" rows="10" required></textarea>
                     </div>
                     <div class="text-center" style="margin-top: -25px;"><button type="submit">Submit</button></div>
                 </form>
@@ -55,10 +61,10 @@
 
     </div>
 </section><!-- End Contact Section -->
-<div class="row">
+<!--<div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>-->
             @*<div class="form-group">
                 <label asp-for="CourseId" class="control-label"></label>
                 <input asp-for="CourseId" class="form-control" />
@@ -76,32 +82,28 @@
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
             </div>*@
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label asp-for="Body" class="control-label"></label>
                 <input asp-for="Body" class="form-control" />
                 <span asp-validation-for="Body" class="text-danger"></span>
-            </div>
+            </div>-->
             @*<div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
                 <input asp-for="Date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>*@
-            <div class="form-group">
+            <!--<div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+</div>-->
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#BlogEn").jqte();
+            $("#Body").jqte();
         });
     </script>
 }

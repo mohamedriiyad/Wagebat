@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -31,11 +30,30 @@ namespace Wagebat.Controllers
         // GET: Questions
         public async Task<IActionResult> Index()
         {
+            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+
             var applicationDbContext = _context.Questions.Include(q => q.Status)
                 .Include(q => q.Subscription)
-                .Include(q => q.User);
+                .Include(q => q.User)
+                .Where(q => q.UserId == currentUser.Id);
             return View(await applicationDbContext.ToListAsync());
         }
+
+        public async Task<IActionResult> AdminIndex()
+        {
+            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var questions = await _context.Questions.Include(q => q.Status)
+                .Include(q => q.Subscription)
+                .Include(q => q.User)
+                .Where(q => q.UserId == currentUser.Id).ToListAsync();
+            foreach (var item in questions)
+            {
+                item.Body = WebUtility.HtmlDecode(item.Body);
+            }
+            return View(questions);
+        }
+
 
         // GET: Questions/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -61,6 +79,7 @@ namespace Wagebat.Controllers
         // GET: Questions/Create
         public IActionResult Create()
         {
+
             ViewData["ShowMessage"] = false;
             ViewData["StatusId"] = new SelectList(_context.Statuses, "Name", "Name");
             ViewData["Courses"] = new SelectList(_context.Courses, "Id", "Name");
@@ -109,6 +128,7 @@ namespace Wagebat.Controllers
                 CourseId = question.CourseId,
                 SubscriptionId = userSubscription.Id,
                 Status = await _context.Statuses.FirstOrDefaultAsync(),
+                UserId = currentUser.Id,
                 Date = DateTime.Now
             };
             newQuestion.Body = WebUtility.HtmlEncode(question.Body);

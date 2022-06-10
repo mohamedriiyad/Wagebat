@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Wagebat.Models
 {
     public class Transaction
     {
+        public Transaction()
+        {
+            TransactionAttachments = new Collection<TransactionAttachment>();
+            Reviews = new Collection<Review>();
+            Comments = new Collection<Comment>();
+        }
         public int Id { get; set; }
         public int QuestionId { get; set; }
         public Question Question { get; set; }

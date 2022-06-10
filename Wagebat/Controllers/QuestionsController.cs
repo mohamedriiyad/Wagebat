@@ -39,7 +39,7 @@ namespace Wagebat.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        public async Task<IActionResult> AdminIndex()
+        public async Task<IActionResult> StudentIndex()
         {
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
 

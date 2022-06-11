@@ -101,11 +101,11 @@ namespace Wagebat.Controllers
                 AnswerDate = DateTime.Now
             };
 
-            var question = await _context.Questions.FindAsync(transaction.QuestionId);
-
-            question.StatusId = 2;
-
-            _context.Questions.Update(question);
+            var questionInDb = await _context.Questions.FindAsync(transaction.QuestionId);
+            questionInDb.StatusId = 2;
+            _context.Questions.Update(questionInDb);
+            await _context.SaveChangesAsync();
+            var stat = _context.Questions.FindAsync(transaction.QuestionId);
 
             newTransaction.Answer = WebUtility.HtmlEncode(transaction.Answer);
             foreach (var attatchment in attatchments)

@@ -78,19 +78,33 @@ namespace Wagebat.Controllers
             {
                 return NotFound();
             }
+            var transaction = await _context.Transactions
+                .Include(t => t.Acceptor)
+                .Include(t => t.Comments)
+                .Include(t => t.Question)
+                .ThenInclude(q => q.QuestionAttachments)
+                .Include(t => t.Question.Status)
+                .Include(t => t.Reviews)
+                .Include(t => t.Status)
+                .Include(t => t.TransactionAttachments)
+                .Where(t => t.QuestionId == id).FirstOrDefaultAsync();
 
-            var question = await _context.Questions
+            if (transaction == null)
+            {
+                var question = await _context.Questions
                 .Include(q => q.Status)
                 .Include(q => q.QuestionAttachments)
                 .Include(q => q.Subscription)
                 .Include(q => q.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (question == null)
-            {
-                return NotFound();
-            }
+                if (question == null)
+                    return NotFound("There is no such question!");
 
-            return View(question);
+                transaction = new Transaction { Question = question };
+            }
+            transaction.Question.Body = WebUtility.HtmlDecode(transaction.Question.Body);
+            transaction.Answer = WebUtility.HtmlDecode(transaction.Answer);
+            return View(transaction);
         }
 
         // GET: Questions/Create

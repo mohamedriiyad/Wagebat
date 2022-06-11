@@ -100,6 +100,13 @@ namespace Wagebat.Controllers
                 StatusId = 2,
                 AnswerDate = DateTime.Now
             };
+
+            var question = await _context.Questions.FindAsync(transaction.QuestionId);
+
+            question.StatusId = 2;
+
+            _context.Questions.Update(question);
+
             newTransaction.Answer = WebUtility.HtmlEncode(transaction.Answer);
             foreach (var attatchment in attatchments)
             {

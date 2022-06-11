@@ -25,7 +25,7 @@
                         <a data-bs-toggle="collapse" data-bs-target="#faq-list-@item.Id" class="collapsed">
                             @item.Question.Body
 
-                            <i class="bx icon-close" style="margin-top: 15px"><a asp-action="Details" asp-controller="Questions" asp-route-id="@item.Id" class="btn-block">Question Details</a></i>
+                            <i class="bx icon-close" style="margin-top: 15px"><a asp-action="Details" asp-controller="Questions" asp-route-id="@item.Question.Id" class="btn-block">Question Details</a></i>
 
                             <i class="bx icon-show" style="margin-right: 75px">@item.Status.Name</i>
                         </a>

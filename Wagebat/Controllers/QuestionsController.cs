@@ -44,6 +44,7 @@ namespace Wagebat.Controllers
         public async Task<IActionResult> TransactionIndex()
         {
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+
             var transactions = _context.Transactions
                 .Include(t => t.Status)
                 .Include(t => t.Question)

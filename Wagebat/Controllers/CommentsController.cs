@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace Wagebat.Controllers
     public class CommentsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CommentsController(ApplicationDbContext context)
+        public CommentsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Comments
@@ -58,18 +61,22 @@ namespace Wagebat.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,TransactionId,Body,Date")] Comment comment)
+        public async Task<JsonResult> Create(Comment comment)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(comment);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["TransactionId"] = new SelectList(_context.Transactions, "Id", "Id", comment.TransactionId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", comment.UserId);
-            return View(comment);
+            if (!ModelState.IsValid)
+                return Json(false);
+            if (comment.Body == null)
+                return Json(false);
+
+            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            comment.TransactionId = comment.Id;
+            comment.Date = DateTime.Now;
+            comment.UserId = currentUser.Id;
+            comment.Id = 0;
+            _context.Add(comment);
+            await _context.SaveChangesAsync();
+            return Json(true);
         }
 
         // GET: Comments/Edit/5

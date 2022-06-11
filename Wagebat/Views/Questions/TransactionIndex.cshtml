@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Wagebat.Models.Question>
+﻿@model IEnumerable<Wagebat.Models.Transaction>
 
 @{
     ViewData["Title"] = "Index";
@@ -19,21 +19,22 @@
             <ul>
                 @foreach (var item in Model)
                 {
-                    
+
                     <li data-aos="fade-up" data-aos-delay="200">
                         <i class="bx bx-help-circle icon-help"></i>
                         <a data-bs-toggle="collapse" data-bs-target="#faq-list-@item.Id" class="collapsed">
-                            @Html.Raw(item.Body)
-                            <i class="bx icon-close" style="margin-top: 15px"><a asp-action="Create" asp-controller="Transactions" asp-route-id="@item.Id" class="btn-block">Answer</a></i>
+                            @item.Question.Body
+
+                            <i class="bx icon-close" style="margin-top: 15px"><a asp-action="Details" asp-controller="Questions" asp-route-id="@item.Id" class="btn-block">Question Details</a></i>
 
                             <i class="bx icon-show" style="margin-right: 75px">@item.Status.Name</i>
                         </a>
                         <div id="faq-list-@item.Id" class="collapse" data-bs-parent=".faq-list">
                             <p>
-                                @item.Status.Name
+                                @item.Answer
                             </p>
                         </div>
-                        
+
                     </li>
                 }
             </ul>

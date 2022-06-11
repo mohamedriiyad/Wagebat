@@ -28,6 +28,7 @@ namespace Wagebat.Controllers
         }
 
         // GET: Questions
+        
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -37,6 +38,19 @@ namespace Wagebat.Controllers
                 .Include(q => q.User)
                 .Where(q => q.UserId == currentUser.Id);
             return View(await applicationDbContext.ToListAsync());
+        }
+
+
+        public async Task<IActionResult> TransactionIndex()
+        {
+            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            var transactions = _context.Transactions
+                .Include(t => t.Status)
+                .Include(t => t.Question)
+                .Include(t => t.Acceptor)
+                .Where(t => t.Acceptor.Id == currentUser.Id);
+
+            return View(await transactions.ToListAsync());
         }
 
         public async Task<IActionResult> StudentIndex()
@@ -122,6 +136,7 @@ namespace Wagebat.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Question question, List<IFormFile> files)
         {
+
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
             var userSubscription = _context.Subscriptions
                 .Where(s => s.UserId == currentUser.Id && s.User.Questions.Count < s.Package.QuestionsCount)

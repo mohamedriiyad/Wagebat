@@ -34,12 +34,7 @@
     * Author: BootstrapMade.com
     * License: https://bootstrapmade.com/license/
     ======================================================== --> 
-    <script>
-        $(document).ready(function() {
-            $('.ul').find('[href="]' + window.location.pathname + '"]').parent().addClass('active');
-        })
-        
-    </script>
+    
 </head>
 
 <body>
@@ -54,20 +49,20 @@
 
             <nav id="navbar" class="navbar">
                 <ul class="ul">
-                    <li><a class="nav-link scrollto active" id="home" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Home" && ViewContext.RouteData.Values["action"].ToString() == "Index" ? "active" : " ") " id="home" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li>@*<a class="nav-link scrollto" id="privacy" asp-controller="Home" asp-action="Privacy">About</a>*@</li>
                     @*<li><a class="nav-link scrollto" href="#services">Search</a></li>*@
-                    <li><a class="nav-link scrollto" asp-action="Create" asp-controller="Questions">Ask</a></li>
-                    <li><a class="nav-link scrollto" asp-action="Index" asp-controller="Packages">Pricing</a></li>
+                    <li><a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Questions" && ViewContext.RouteData.Values["action"].ToString() == "Create" ? "active" : " ")" asp-action="Create" asp-controller="Questions">Ask</a></li>
+                    <li><a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() =="Packages"? "active" : " ")" asp-action="Index" asp-controller="Packages">Pricing</a></li>
                     @if (User.IsInRole("user"))
                     {
-                        <li><a class="nav-link scrollto" asp-action="StudentIndex" asp-controller="Questions">History</a></li>
+                        <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() =="StudentIndex"? "active" : " ")" asp-action="StudentIndex" asp-controller="Questions">History</a></li>
                     }
                     @if (User.IsInRole("instructor"))
                     {
-                        <li><a class="nav-link scrollto" asp-action="InstructorIndex" asp-controller="Questions">Questions</a></li>
+                        <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() =="InstructorIndex"? "active" : " ")" asp-action="InstructorIndex" asp-controller="Questions">Questions</a></li>
                     }
-                    <li><a class="nav-link scrollto" href="#portfolio">waiting</a></li>
+                    <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() ==""? "active" : " ")" href="#portfolio">waiting</a></li>
                     <li class="dropdown">
                         <a href="#"><span>Packages</span> <i class="bi bi-chevron-down"></i></a>
                         <ul>
@@ -79,16 +74,16 @@
 
                     @if (User.IsInRole("admin"))
                     {
-                        <li><a class="nav-link scrollto" asp-action="Index" asp-controller="Administration">Admin</a></li>
+                        <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() =="index"? "active" : " ")" asp-action="Index" asp-controller="Administration">Admin</a></li>
                     }
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li><a class="getstarted scrollto" asp-area="Identity" asp-page="/Account/Logout">Logout</a></li>
+                        <li><a class="getstarted" asp-area="Identity" asp-page="/Account/Logout">Logout</a></li>
                     }
                     else
                     {
-                        <li><a class="nav-link scrollto" asp-area="Identity" asp-page="/Account/Register">Register</a></li>
-                        <li><a class="getstarted scrollto" asp-area="Identity" asp-page="/Account/Login">Login</a></li>
+                        <li><a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a></li>
+                        <li><a class="getstarted" asp-area="Identity" asp-page="/Account/Login">Login</a></li>
                     }
 
                 </ul>
@@ -197,7 +192,21 @@
     <script src="~/assets/js/main.js"></script>
     <script type="text/javascript" src="~/assets/scripts/main.js"></script>
     <script src="~/assets/scripts/jquery-1.10.2.min.js"></script>
+    <script>
+        console.log("sdsdsd")
+        const tabs = document.querySelectorAll('.nav-link');
+        tabs.forEach(clickedTab => {
+            clickedTab.addEventListener('click', () => {
+                tabs.forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                clickedTab.classList.add('active');
+                console.log(clickedTab)
+            });
+        });
+        
 
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 

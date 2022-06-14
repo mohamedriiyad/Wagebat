@@ -43,7 +43,7 @@
     <header id="header" class="fixed-top header-inner-pages">
         <div class="container d-flex align-items-center">
 
-            <h1 class="logo me-auto"><a href="index.html">Wagebat</a></h1>
+            <h1 class="logo me-auto"><a asp-controller="Home" asp-action="Index">Wagebat</a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="index.html" class="logo me-auto"><img src="~/assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
@@ -60,9 +60,9 @@
                     }
                     @if (User.IsInRole("instructor"))
                     {
-                        <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() =="InstructorIndex"? "active" : " ")" asp-action="InstructorIndex" asp-controller="Questions">Questions</a></li>
+                        <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() =="TransactionIndex" || ViewContext.RouteData.Values["controller"].ToString() == "Questions" && ViewContext.RouteData.Values["action"].ToString() == "Details"? "active" : " ")" asp-action="TransactionIndex" asp-controller="Questions">Questions</a></li>
                     }
-                    <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() ==""? "active" : " ")" href="#portfolio">waiting</a></li>
+                    <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() =="InstructorIndex" ? "active" : " ")" asp-action="InstructorIndex" asp-controller="Questions">waiting</a></li>
                     <li class="dropdown">
                         <a href="#"><span>Packages</span> <i class="bi bi-chevron-down"></i></a>
                         <ul>
@@ -191,22 +191,6 @@
     <!-- Template Main JS File -->
     <script src="~/assets/js/main.js"></script>
     <script type="text/javascript" src="~/assets/scripts/main.js"></script>
-    <script src="~/assets/scripts/jquery-1.10.2.min.js"></script>
-    <script>
-        console.log("sdsdsd")
-        const tabs = document.querySelectorAll('.nav-link');
-        tabs.forEach(clickedTab => {
-            clickedTab.addEventListener('click', () => {
-                tabs.forEach(tab => {
-                    tab.classList.remove('active');
-                });
-                clickedTab.classList.add('active');
-                console.log(clickedTab)
-            });
-        });
-        
-
-    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 

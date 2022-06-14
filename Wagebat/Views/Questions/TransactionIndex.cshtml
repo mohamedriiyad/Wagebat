@@ -11,8 +11,8 @@
     <div class="container" data-aos="fade-up">
 
         <div class="section-title">
-            <h2>Frequently Asked Questions</h2>
-            <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+            <h2>Answered Questions</h2>
+            <p>These are all your Answers</p>
         </div>
 
         <div class="faq-list">
@@ -23,7 +23,7 @@
                     <li data-aos="fade-up" data-aos-delay="200">
                         <i class="bx bx-help-circle icon-help"></i>
                         <a data-bs-toggle="collapse" data-bs-target="#faq-list-@item.Id" class="collapsed">
-                            @item.Question.Body
+                            @Html.Raw(item.Question.Body)
 
                             <i class="bx icon-close" style="margin-top: 15px"><a asp-action="Details" asp-controller="Questions" asp-route-id="@item.Question.Id" class="btn-block">Question Details</a></i>
 
@@ -31,7 +31,7 @@
                         </a>
                         <div id="faq-list-@item.Id" class="collapse" data-bs-parent=".faq-list">
                             <p>
-                                @item.Answer
+                                @Html.Raw(item.Answer)
                             </p>
                         </div>
 

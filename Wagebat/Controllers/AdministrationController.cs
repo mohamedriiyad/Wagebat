@@ -73,7 +73,10 @@ namespace Wagebat.Controllers
                 ViewData["Courses"] = new SelectList(_db.Courses, "Id", "Name");
                 return View();
             }
-            return RedirectToAction("Index", "Courses");
+            if(User.IsInRole("admin"))
+                return RedirectToAction("Index", "Courses");
+
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]

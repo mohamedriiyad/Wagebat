@@ -50,7 +50,11 @@ namespace Wagebat.Controllers
                 .Include(t => t.Question)
                 .Include(t => t.Acceptor)
                 .Where(t => t.Acceptor.Id == currentUser.Id);
-
+            foreach (var item in transactions)
+            {
+                item.Answer = WebUtility.HtmlDecode(item.Answer);
+                item.Question.Body = WebUtility.HtmlDecode(item.Question.Body);
+            }
             return View(await transactions.ToListAsync());
         }
 
@@ -77,7 +81,7 @@ namespace Wagebat.Controllers
                 .Include(q => q.Subscription)
                 .Include(q => q.User)
                 .ThenInclude(u => u.Courses)
-                .Where(q => ids.Any(id => id == q.CourseId)).ToListAsync();
+                .Where(q => ids.Any(id => id == q.CourseId) && q.StatusId == 1).ToListAsync();
             foreach (var item in questions)
             {
                 item.Body = WebUtility.HtmlDecode(item.Body);

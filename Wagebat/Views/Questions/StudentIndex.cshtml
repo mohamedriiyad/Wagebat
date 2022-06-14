@@ -24,6 +24,7 @@
                         <i class="bx bx-help-circle icon-help"></i>
                         <a data-bs-toggle="collapse" data-bs-target="#faq-list-@item.Id" class="collapsed">
                             @Html.Raw(item.Body)
+                            <i class="bx icon-close" style="margin-top: 15px"><a asp-action="Details" asp-controller="Questions" asp-route-id="@item.Id" class="btn-block">Question Details</a></i>
                             <i class="bx icon-show" style="margin-right: 75px">@item.Status.Name</i>
                             <i class="bx bx-chevron-down icon-show"></i>
 

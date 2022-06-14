@@ -24,6 +24,9 @@
                         <i class="bx bx-help-circle icon-help"></i>
                         <a data-bs-toggle="collapse" data-bs-target="#faq-list-@item.Id" class="collapsed">
                             @Html.Raw(item.Body)
+                            <i class="bx icon-close" style="margin-top: 15px; right: 141px;">
+                                <a asp-action="ApplyQuestion" asp-controller="Transactions" asp-route-id="@item.Id" class="btn-block">Apply ||</a>
+                            </i>
                             @*<i class="bx icon-close" style="margin-top: 15px"><a asp-action="Create" asp-controller="Transactions" asp-route-id="@item.Id" class="btn-block">Answer</a></i>*@
                             @*<i class="bx icon-close" style="margin-top: 35px"><a asp-action="ApplyQuestion" asp-controller="Transactions" asp-route-id="@item.Id" class="btn-block">Apply</a></i>*@
                             <i class="bx icon-close" style="margin-top: 15px"></i>

@@ -276,6 +276,18 @@ namespace Wagebat.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ApplyQuestion(int id)
+        {
+            var question = await _context.Questions.FindAsync(id);
+            question.Status.Id = 3;
+            _context.Questions.Update(question);
+            await _context.SaveChangesAsync();
+            return View();
+        }
+
+
+
         private bool QuestionExists(int id)
         {
             return _context.Questions.Any(e => e.Id == id);

@@ -50,6 +50,7 @@ namespace Wagebat.Controllers
                 .Include(t => t.Question)
                 .Include(t => t.Acceptor)
                 .Where(t => t.Acceptor.Id == currentUser.Id);
+
             foreach (var item in transactions)
             {
                 item.Answer = WebUtility.HtmlDecode(item.Answer);

@@ -208,6 +208,25 @@ namespace Wagebat.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        
+        public async Task<IActionResult> ApplyQuestion(int id)
+        {
+            var question = await _context.Questions.Include(q => q.Status).FirstOrDefaultAsync(q => q.Id == id);
+            var status = await _context.Statuses.FindAsync(3);
+            question.Status = status;
+            
+            var transaction = new Transaction
+            {
+                Question = question,
+                Acceptor = await _userManager.FindByNameAsync(User.Identity.Name),
+                StatusId = 3
+            };
+            _context.Questions.Update(question);
+            await _context.Transactions.AddAsync(transaction);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("InstructorIndex", "Questions");
+        }
+
         private bool TransactionExists(int id)
         {
             return _context.Transactions.Any(e => e.Id == id);

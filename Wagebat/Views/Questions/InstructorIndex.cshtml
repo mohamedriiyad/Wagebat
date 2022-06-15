@@ -19,16 +19,13 @@
             <ul>
                 @foreach (var item in Model)
                 {
-                    
-                    <li data-aos="fade-up" data-aos-delay="200">
+
+                    <li style="border: groove; border-right: groove; border-left: groove;" data-aos="fade-up" data-aos-delay="200">
                         <i class="bx bx-help-circle icon-help"></i>
                         <a data-bs-toggle="collapse" data-bs-target="#faq-list-@item.Id" class="collapsed">
-                            @Html.Raw(item.Body)
-                            @*<i class="bx icon-close" style="margin-top: 15px; right: 141px;">
-                                <a asp-action="ApplyQuestion" asp-controller="Transactions" asp-route-id="@item.Id" class="btn-block">Apply ||</a>
-                            </i*@>
-                            @*<i class="bx icon-close" style="margin-top: 15px"><a asp-action="Create" asp-controller="Transactions" asp-route-id="@item.Id" class="btn-block">Answer</a></i>*@
-                            @*<i class="bx icon-close" style="margin-top: 35px"><a asp-action="ApplyQuestion" asp-controller="Transactions" asp-route-id="@item.Id" class="btn-block">Apply</a></i>*@
+                            <div style="height: 2em; padding: 3px; overflow: hidden; margin-top: 16px; display: inline-block;">
+                                @Html.Raw(item.Body)
+                            </div>
                             <i class="bx icon-close" style="margin-top: 15px"></i>
                             <i class="bx icon-close" style="margin-top: 15px; right: 61px;">
                                 <a asp-action="Create" asp-controller="Transactions" asp-route-id="@item.Id" class="btn-block">Answer ||</a>
@@ -49,7 +46,7 @@
                                 @item.Status.Name
                             </p>
                         </div>
-                        
+
                     </li>
                 }
             </ul>

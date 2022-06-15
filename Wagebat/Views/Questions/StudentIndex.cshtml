@@ -11,8 +11,8 @@
     <div class="container" data-aos="fade-up">
 
         <div class="section-title">
-            <h2>Frequently Asked Questions</h2>
-            <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+            <h2>Your Questions</h2>
+            <p>These are all you Question History.</p>
         </div>
 
         <div class="faq-list">
@@ -20,20 +20,23 @@
                 @foreach (var item in Model)
                 {
                     
-                    <li data-aos="fade-up" data-aos-delay="200">
+                    <li style="border: groove; border-right: groove; border-left: groove;" data-aos="fade-up" data-aos-delay="200">
                         <i class="bx bx-help-circle icon-help"></i>
-                        <a data-bs-toggle="collapse" data-bs-target="#faq-list-@item.Id" class="collapsed">
-                            @Html.Raw(item.Body)
-                            <i class="bx icon-close" style="margin-top: 15px"><a asp-action="Details" asp-controller="Questions" asp-route-id="@item.Id" class="btn-block">Question Details</a></i>
-                            <i class="bx icon-show" style="margin-right: 75px">@item.Status.Name</i>
+                        <a  data-bs-toggle="collapse" data-bs-target="#faq-list-@item.Id" class="collapsed">
+                            <div style="height: 2em; padding: 3px; overflow: hidden; margin-top: 16px; display: inline-block;">
+                                @Html.Raw(item.Body)
+                            </div>
+                            
+                            <i class="bx icon-close" style="margin-top: 15px; color: #9396a1;"><a style="color: #9396a1;" asp-action="Details" asp-controller="Questions" asp-route-id="@item.Id" class="btn-block">Question Details</a></i>
+                            <i class="bx icon-show" style="margin-right: 75px"></i>
                             <i class="bx bx-chevron-down icon-show"></i>
 
-                            <i class="bx icon-close" style="margin-right: 75px">@item.Status.Name</i>
+                            <i class="bx icon-close" style="margin-right: 75px"></i>
                             <i class="bx bx-chevron-up icon-close"></i>
                         </a>
                         <div id="faq-list-@item.Id" class="collapse" data-bs-parent=".faq-list">
                             <p>
-                                Hollo
+                                @item.Status.Name
                             </p>
                         </div>
                     </li>

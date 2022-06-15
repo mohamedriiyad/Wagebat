@@ -9,7 +9,6 @@ namespace Wagebat.Models
         public Transaction()
         {
             TransactionAttachments = new Collection<TransactionAttachment>();
-            Reviews = new Collection<Review>();
             Comments = new Collection<Comment>();
         }
         public int Id { get; set; }
@@ -21,7 +20,7 @@ namespace Wagebat.Models
         public DateTime AnswerDate { get; set; }
         public int StatusId { get; set; }
         public Status Status { get; set; }
-        public ICollection<Review> Reviews { get; set; }
+        public Review Review { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<TransactionAttachment> TransactionAttachments { get; set; }
     }

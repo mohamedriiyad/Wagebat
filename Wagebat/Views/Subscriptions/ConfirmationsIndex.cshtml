@@ -1,0 +1,112 @@
+﻿@model IEnumerable<Wagebat.Models.Subscription>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<input type="hidden" id="subscriptionId" />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Package)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Package.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    <a href="#" style="color:red;" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Delete"  onclick="confirm('@item.Id')">Confirm</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<!--Modal-->
+<div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="margin-top: 77px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to Confirm this Subscription?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" onclick="deleteOrder()">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+<script>
+    var confirm = function (id) {
+        $("#subscriptionId").val(id);
+    }
+
+    var deleteOrder = function () {
+        var _id = $("#subscriptionId").val();
+        $.ajax({
+            type: "POST",
+            url: "/Subscriptions/Confirm",
+            data: { id: _id },
+            success: function (result) {
+                if (result) {
+                    $("#deleteModal").fadeOut(500);
+                    $("#orderId").val(null);
+                    window.location.href = "/Subscriptions/ConfirmationsIndex";
+                } else {
+                    alert("Something went wrong while processing your request.");
+                }
+            }
+        });
+    }
+
+    var cancel = function () {
+        $("#deleteModal").fadeOut(500);
+    }
+</script>
+
+}

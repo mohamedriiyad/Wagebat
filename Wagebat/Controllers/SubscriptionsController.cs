@@ -29,6 +29,40 @@ namespace Wagebat.Controllers
             var applicationDbContext = _context.Subscriptions.Include(s => s.Confirmer).Include(s => s.Package).Include(s => s.Status).Include(s => s.User);
             return View(await applicationDbContext.ToListAsync());
         }
+        public async Task<IActionResult> ConfirmationsIndex()
+        {
+            var subscriptions = await _context.Subscriptions
+                .Include(s => s.Confirmer)
+                .Include(s => s.Package)
+                .Include(s => s.Status)
+                .Include(s => s.User)
+                .Where(s => s.Confirmer == null).ToListAsync();
+
+            return View(subscriptions);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> Confirm (int? id)
+        {
+            if (id == null)
+                return Json(false);
+
+            var subscription = await _context.Subscriptions
+                .Include(s => s.Confirmer)
+                .Include(s => s.Package)
+                .Include(s => s.Status)
+                .Include(s => s.User)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            
+            if (subscription == null)
+                return Json(false);
+
+            subscription.Confirmer = await _userManager.FindByNameAsync(User.Identity.Name);
+            _context.Subscriptions.Update(subscription);
+            await _context.SaveChangesAsync();
+
+            return Json(true);
+        }
 
         // GET: Subscriptions/Details/5
         public async Task<IActionResult> Details(int? id)

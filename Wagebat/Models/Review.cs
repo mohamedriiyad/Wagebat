@@ -9,7 +9,7 @@ namespace Wagebat.Models
         public ApplicationUser User { get; set; }
         public int TransactionId { get; set; }
         public Transaction Transaction { get; set; }
-        public byte Liked { get; set; }
+        public bool Liked { get; set; }
         public DateTime Date { get; set; }
         public string Comment { get; set; }
     }

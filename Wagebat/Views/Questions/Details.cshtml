@@ -136,6 +136,14 @@
                                 @Html.Raw(Model.Answer)
                             </dd>
                         </dl>
+                        <div class="top-100" style="margin: 25rem;"></div>
+                        <hr />
+
+                        <div style="margin-bottom: 20px;">
+                            <a href="#" style="margin-left: 15px; margin-right: 5px;" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Delete" onclick="confirm('@Model.Id', '@Model.QuestionId')">Comment</a> || 500
+                            <a href="#" style="margin-left: 5px" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Delete" onclick="confirm('@Model.Id', '@Model.QuestionId')"><i class="bi bi-hand-thumbs-up"></i> Like</a>
+                        </div>
+
                     </div>
 
 
@@ -237,9 +245,9 @@
             }
 
 
-            <div class="row">
+            @*<div class="row">
                 <a href="#" style="text-align: center" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Delete" onclick="confirm('@Model.Id', '@Model.QuestionId')">Add Comment</a>
-            </div>
+            </div>*@
         }
 
         <input type="hidden" id="orderId" />

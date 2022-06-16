@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace Wagebat.Controllers
     public class ReviewsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ReviewsController(ApplicationDbContext context)
+        public ReviewsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Reviews
@@ -61,28 +64,24 @@ namespace Wagebat.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int id)
         {
-            var transaction = _context.Transactions.Find(id);
+            var transaction = await _context.Transactions
+                .Include(t => t.Question)
+                .Include(t => t.Review)
+                .FirstOrDefaultAsync(t => t.Id == id);
 
             if (transaction.Review != null)
             {
                 if (transaction.Review.Liked == true)
-                {
                     transaction.Review.Liked = false;
-                    _context.Transactions.Update(transaction);
-                    _context.SaveChanges();
-                    return RedirectToAction("Details", "Questions", new { id = transaction.Question.Id });
-                }
                 else if (transaction.Review.Liked == false)
-                {
                     transaction.Review.Liked = true;
-                    _context.Transactions.Update(transaction);
-                    _context.SaveChanges();
-                    return RedirectToAction("Details", "Questions", new { id = transaction.Question.Id });
-                }
                 else return NotFound();
-
             }
+            else
+                transaction.Review = new Review{ Liked = true, User = await _userManager.GetUserAsync(User) };
 
+            _context.Transactions.Update(transaction);
+            _context.SaveChanges();
             return RedirectToAction("Details", "Questions", new { id = transaction.Question.Id });
         }
 

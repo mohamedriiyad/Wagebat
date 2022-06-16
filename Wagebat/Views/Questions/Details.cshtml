@@ -141,7 +141,14 @@
 
                         <div style="margin-bottom: 20px;">
                             <a href="#" style="margin-left: 15px; margin-right: 5px;" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Comment" onclick="confirm('@Model.Id', '@Model.QuestionId')">Comment</a>
-                            <a asp-controller="Reviews" asp-action="Create" asp-route-id="@Model.Id" style="margin-left: 5px" data-target=".bd-example-modal-sm" title="Like" onclick="confirm('@Model.Id', '@Model.QuestionId')"><i class="bi bi-hand-thumbs-up"></i> Like</a>
+                            @if (Model.Review == null || Model.Review.Liked == false)
+                            {
+                                <a asp-controller="Reviews" asp-action="Create" asp-route-id="@Model.Id" style="margin-left: 5px" data-target=".bd-example-modal-sm" title="Like" onclick="confirm('@Model.Id', '@Model.QuestionId')"><i class="bi bi-hand-thumbs-up"></i> Like</a>
+                            }
+                            else if (Model.Review.Liked == true)
+                            {
+                                <a asp-controller="Reviews" asp-action="Create" asp-route-id="@Model.Id" style="margin-left: 5px; font-weight: bold; color: #37517e;" data-target=".bd-example-modal-sm" title="Like" onclick="confirm('@Model.Id', '@Model.QuestionId')"><i class="bi bi-hand-thumbs-up"></i> Liked</a>
+                            }
                         </div>
 
                     </div>

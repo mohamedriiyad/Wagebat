@@ -31,6 +31,8 @@ namespace Wagebat.Controllers
             var applicationDbContext = _context.Subscriptions.Include(s => s.Confirmer).Include(s => s.Package).Include(s => s.Status).Include(s => s.User);
             return View(await applicationDbContext.ToListAsync());
         }
+        
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> ConfirmationsIndex()
         {
             var subscriptions = await _context.Subscriptions

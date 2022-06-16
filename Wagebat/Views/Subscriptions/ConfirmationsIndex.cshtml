@@ -5,13 +5,93 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Index</h1>
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-users icon-gradient bg-happy-itmeo">
+                </i>
+            </div>
+            <div>
+                All Subscription
+                <div class="page-title-subheading">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+                </div>
+            </div>
+        </div>
+        <div class="page-title-actions">
 
-<input type="hidden" id="subscriptionId" />
+            @*<div class="d-inline-block">
+                    <p>
+                        <a href="@Url.Action("Create", "Transactions")" class="btn btn-primary">
+                            Create &nbsp; <i class="pe-7s-add-user"></i>
+                        </a>
+                    </p>
+                </div>*@
+        </div>
+    </div>
+</div>
+
+
+<div class="row clearfix">
+    <div class="col-lg-12">
+
+        <div class="card">
+            <div class="body">
+
+                <div class="table-responsive">
+                    <input type="hidden" id="subscriptionId" />
+                    <table class=" mb-0 table table-bordered col-lg-12" style="text-align: center">
+                        <tr>
+                            <th>__________</th>
+                            <th>
+                                User Name
+                            </th>
+                            <th>
+                                Package
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                Date
+                            </th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td style="font-size: 20px;">
+                                    @*<a style="color: #afafaa;" data-toggle="tooltip" data-placement="left" title="Edit" href="@Url.Action("Edit", "Transactions", new { id = item.Id})"><i title="Edit" class="pe-7s-pen"></i></a>*@
+                                    <a href="#" class="btn btn-group-lg" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Confirm" onclick="confirm('@item.Id')">Confirm</a>
+                                    @*<a href="#" style="color:red;" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Delete" onclick="confirm('@item.Id')"><i class="pe-7s-trash"></i></a>*@
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.User.UserName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Package.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Status.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Date)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div><!-- #content end -->
+</div>
+
+
+@*<input type="hidden" id="subscriptionId" />
 <table class="table">
     <thead>
         <tr>
@@ -48,7 +128,7 @@
                     @Html.DisplayFor(modelItem => item.Date)
                 </td>
                 <td>
-                    <a href="#" style="color:red;" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Delete"  onclick="confirm('@item.Id')">Confirm</a> |
+                    <a href="#" style="color:red;" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Delete" onclick="confirm('@item.Id')">Confirm</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
@@ -56,7 +136,7 @@
         }
 
     </tbody>
-</table>
+</table>*@
 
 <!--Modal-->
 <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
@@ -81,32 +161,32 @@
 
 
 @section Scripts {
-<script>
-    var confirm = function (id) {
-        $("#subscriptionId").val(id);
-    }
+    <script>
+        var confirm = function (id) {
+            $("#subscriptionId").val(id);
+        }
 
-    var deleteOrder = function () {
-        var _id = $("#subscriptionId").val();
-        $.ajax({
-            type: "POST",
-            url: "/Subscriptions/Confirm",
-            data: { id: _id },
-            success: function (result) {
-                if (result) {
-                    $("#deleteModal").fadeOut(500);
-                    $("#orderId").val(null);
-                    window.location.href = "/Subscriptions/ConfirmationsIndex";
-                } else {
-                    alert("Something went wrong while processing your request.");
+        var deleteOrder = function () {
+            var _id = $("#subscriptionId").val();
+            $.ajax({
+                type: "POST",
+                url: "/Subscriptions/Confirm",
+                data: { id: _id },
+                success: function (result) {
+                    if (result) {
+                        $("#deleteModal").fadeOut(500);
+                        $("#orderId").val(null);
+                        window.location.href = "/Subscriptions/ConfirmationsIndex";
+                    } else {
+                        alert("Something went wrong while processing your request.");
+                    }
                 }
-            }
-        });
-    }
+            });
+        }
 
-    var cancel = function () {
-        $("#deleteModal").fadeOut(500);
-    }
-</script>
+        var cancel = function () {
+            $("#deleteModal").fadeOut(500);
+        }
+    </script>
 
 }

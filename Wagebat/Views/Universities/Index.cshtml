@@ -45,22 +45,22 @@
                     <input type="hidden" id="orderId" />
                     <table class=" mb-0 table table-bordered col-lg-12" style="text-align: center">
                         <tr>
-                            <th>__________</th>
                             <th>
                                 Name
                             </th>
+                            <th>__________</th>
                         </tr>
 
                         @foreach (var item in Model)
                         {
                             <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
                                 <td style="font-size: 20px;">
                                     <a style="color: #afafaa;" data-toggle="tooltip" data-placement="left" title="Edit" href="@Url.Action("Edit", "Universities", new { id = item.Id})"><i title="Edit" class="pe-7s-pen"></i></a>
 
                                     <a href="#" style="color:red;" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Delete" onclick="confirm('@item.Id')"><i class="pe-7s-trash"></i></a>
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
                                 </td>
                             </tr>
                         }

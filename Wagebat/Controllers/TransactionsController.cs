@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -198,17 +199,20 @@ namespace Wagebat.Controllers
         }
 
         // POST: Transactions/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        public async Task<JsonResult> DeleteConfirmed(int id)
         {
             var transaction = await _context.Transactions.FindAsync(id);
+            if (transaction == null)
+                return Json(false);
+
             _context.Transactions.Remove(transaction);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(true);
         }
 
-        
+
         public async Task<IActionResult> ApplyQuestion(int id)
         {
             var question = await _context.Questions.Include(q => q.Status).FirstOrDefaultAsync(q => q.Id == id);

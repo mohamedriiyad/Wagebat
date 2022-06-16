@@ -137,16 +137,18 @@ namespace Wagebat.Controllers
         }
 
         // POST: Status/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        public async Task<JsonResult> DeleteConfirmed(int id)
         {
             var status = await _context.Statuses.FindAsync(id);
+            if (status == null)
+                return Json(false);
+
             _context.Statuses.Remove(status);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(true);
         }
-
         private bool StatusExists(int id)
         {
             return _context.Statuses.Any(e => e.Id == id);

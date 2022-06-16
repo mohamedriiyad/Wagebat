@@ -46,30 +46,44 @@ namespace Wagebat.Controllers
             return View(review);
         }
 
-        // GET: Reviews/Create
-        public IActionResult Create()
-        {
-            ViewData["TransactionId"] = new SelectList(_context.Transactions, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id");
-            return View();
-        }
+        //// GET: Reviews/Create
+        //public IActionResult Create()
+        //{
+        //    ViewData["TransactionId"] = new SelectList(_context.Transactions, "Id", "Id");
+        //    ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id");
+        //    return View();
+        //}
 
-        // POST: Reviews/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,TransactionId,Liked,Date,Comment")] Review review)
+        //// POST: Reviews/Create
+        //// To protect from overposting attacks, enable the specific properties you want to bind to.
+        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(int id)
         {
-            if (ModelState.IsValid)
+            var transaction = _context.Transactions.Find(id);
+
+            if (transaction.Review != null)
             {
-                _context.Add(review);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (transaction.Review.Liked == true)
+                {
+                    transaction.Review.Liked = false;
+                    _context.Transactions.Update(transaction);
+                    _context.SaveChanges();
+                    return RedirectToAction("Details", "Questions", new { id = transaction.Question.Id });
+                }
+                else if (transaction.Review.Liked == false)
+                {
+                    transaction.Review.Liked = true;
+                    _context.Transactions.Update(transaction);
+                    _context.SaveChanges();
+                    return RedirectToAction("Details", "Questions", new { id = transaction.Question.Id });
+                }
+                else return NotFound();
+
             }
-            ViewData["TransactionId"] = new SelectList(_context.Transactions, "Id", "Id", review.TransactionId);
-            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", review.UserId);
-            return View(review);
+
+            return RedirectToAction("Details", "Questions", new { id = transaction.Question.Id });
         }
 
         // GET: Reviews/Edit/5

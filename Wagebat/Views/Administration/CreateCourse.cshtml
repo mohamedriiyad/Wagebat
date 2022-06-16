@@ -3,37 +3,12 @@
     Layout = "_LoginLayout";
 }
 
-@*<div class="app-page-title">
-    <div class="page-title-wrapper">
-        <div class="page-title-heading">
-            <div class="page-title-icon">
-                <i class="pe-7s-add-user icon-gradient bg-happy-itmeo">
-                </i>
-            </div>
-            <div>
-                Add Courses to Instructor
-                <div class="page-title-subheading">
-
-                </div>
-            </div>
-        </div>
-        <div class="page-title-actions">
-
-            <div class="d-inline-block">
-                <p>
-                    <a asp-controller="Courses" asp-action="Index" class="btn btn-primary">Back to List</a>
-                </p>
-            </div>
-        </div>
-    </div>
-</div>*@
-
 <div class="row clearfix">
     <div class="col-lg-6" style="margin: 6px auto;">
 
         <div class="card" style="margin-top: 160px">
             <div class="body">
-                <form method="post" id="reg_form" class="form-horizontal">
+                <form method="post" asp-action="CreateCourse" id="reg_form" class="form-horizontal">
                     <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="login-form" style="width: 60%; margin-top: 250px;">
 
@@ -50,8 +25,9 @@
                         <div class="form-input margin-top-20 clearfix">
                             <input style="margin: 0px auto; display: block; background-color: #4373e7; border: double; " type="submit" class="btn btn-primary" value="Select">
                         </div>
+                        <a asp-action="Index" asp-controller="Home" class="registration">Back to the home page.</a>
                     </div>
-                    
+
                 </form>
             </div>
             @section Scripts {

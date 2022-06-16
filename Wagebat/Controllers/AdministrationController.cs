@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace Wagebat.Controllers
 {
@@ -57,12 +58,15 @@ namespace Wagebat.Controllers
             }
 
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            var userInDb = await _db.ApplicationUsers.Include(a => a.Courses).FirstOrDefaultAsync(u => u.Id == currentUser.Id);
             try
             {
                 foreach (var courseId in input.CoursesIds)
                 {
+                    if (userInDb.Courses.Any(c => c.Id == courseId))
+                        continue;
                     await _db.InstructorCourses.AddAsync(
-                        new InstructorCourse { CourseId = courseId, InstuctorId = currentUser.Id }
+                        new InstructorCourse { CourseId = courseId, InstuctorId = userInDb.Id }
                     );
                 }
                 await _db.SaveChangesAsync();
@@ -195,9 +199,9 @@ namespace Wagebat.Controllers
         //    return RedirectToAction("Index");
         //}
 
-        public async Task<ActionResult> UserEdit(string name)
+        public async Task<ActionResult> UserEdit()
         {
-            var userInDb = await _userManager.FindByNameAsync(name);
+            var userInDb = await _userManager.FindByNameAsync(User.Identity.Name);
             if (userInDb == null)
                 return BadRequest("There is no such USER!");
             var user = new UserSelfEditVM
@@ -206,7 +210,7 @@ namespace Wagebat.Controllers
                 Email = userInDb.Email,
                 PhoneNumber = userInDb.PhoneNumber
             };
-
+           
             return View(user);
         }
 
@@ -223,7 +227,7 @@ namespace Wagebat.Controllers
             {
                 return NotFound($"Unable to load user with Username '{_userManager.GetUserName(User)}'.");
             }
-            var userInDb = await _db.Users.FindAsync(user.Id);
+            var userInDb = await _db.ApplicationUsers.Include(a => a.Courses).FirstOrDefaultAsync(u => u.Id == user.Id);
             userInDb.Email = input.Email;
             userInDb.PhoneNumber = input.PhoneNumber;
             await _db.SaveChangesAsync();
@@ -239,7 +243,12 @@ namespace Wagebat.Controllers
                 return View(input);
             }
 
-
+            if (User.IsInRole("instructor"))
+            {
+                var model = new InstructorCourseInput { CoursesIds = userInDb.Courses.Select(c => c.Id).ToList() };
+                ViewData["Courses"] = new SelectList(_db.Courses, "Id", "Name");
+                return View(nameof(CreateCourse), model);
+            }
             return RedirectToAction("Index", "Home");
         }
         private async Task<ApplicationUser> FindByIdAsync(string id)

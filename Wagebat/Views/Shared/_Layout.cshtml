@@ -79,6 +79,7 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li><a class="getstarted" asp-area="Identity" asp-page="/Account/Logout">Logout</a></li>
+                        <li><a class="getstarted" asp-action="UserEdit" asp-controller="Administration">Edit Info</a></li>
                     }
                     else
                     {

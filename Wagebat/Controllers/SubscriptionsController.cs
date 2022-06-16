@@ -25,11 +25,17 @@ namespace Wagebat.Controllers
         }
 
         // GET: Subscriptions
-        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Subscriptions.Include(s => s.Confirmer).Include(s => s.Package).Include(s => s.Status).Include(s => s.User);
-            return View(await applicationDbContext.ToListAsync());
+            var subscriptions = await _context.Subscriptions
+                .Include(s => s.Confirmer)
+                .Include(s => s.Package)
+                .Include(s => s.Status)
+                .Include(s => s.User)
+                .Where(s => s.Confirmer != null)
+                .ToListAsync();
+
+            return View(subscriptions);
         }
         
         [Authorize(Roles = "admin")]
@@ -63,6 +69,7 @@ namespace Wagebat.Controllers
                 return Json(false);
 
             subscription.Confirmer = await _userManager.FindByNameAsync(User.Identity.Name);
+            subscription.StatusId = 2;
             _context.Subscriptions.Update(subscription);
             await _context.SaveChangesAsync();
 
@@ -206,15 +213,26 @@ namespace Wagebat.Controllers
         }
 
         // POST: Subscriptions/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<JsonResult> DeleteConfirmed(int id)
         {
+            {
             var subscription = await _context.Subscriptions.FindAsync(id);
-            _context.Subscriptions.Remove(subscription);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                if (subscription == null)
+                    return Json(false);
+
+                subscription.Confirmer = null;
+                _context.Subscriptions.Update(subscription);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }catch(Exception ex)
+                {
+
+                }
+                return Json(true);
+            }
         }
 
         private bool SubscriptionExists(int id)

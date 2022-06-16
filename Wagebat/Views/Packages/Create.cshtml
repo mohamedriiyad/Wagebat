@@ -5,69 +5,108 @@
     Layout = "/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Create</h1>
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-add-user icon-gradient bg-happy-itmeo">
+                </i>
+            </div>
+            <div>
+                Create Package
+                <div class="page-title-subheading">
 
-<h4>Package</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input required asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input required asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="page-title-actions">
+            <div class="d-inline-block">
+                <p>
+                    <a asp-action="AdminIndex" class="btn btn-primary">Back to List</a>
+                </p>
             </div>
-            <div class="form-group">
-                <label asp-for="PriceBefore" class="control-label"></label>
-                <input type="number" asp-for="PriceBefore" class="form-control" />
-                <span asp-validation-for="PriceBefore" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PriceAfter" class="control-label"></label>
-                <input type="number" asp-for="PriceAfter" class="form-control" />
-                <span asp-validation-for="PriceAfter" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="QuestionsCount" class="control-label"></label>
-                <input asp-for="QuestionsCount" class="form-control" />
-                <span asp-validation-for="QuestionsCount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="WithItemsIds" class="control-label">With items</label>
-                <select asp-for="WithItemsIds" class="form-control" asp-items="ViewBag.Items">
-                    <option disabled selected value="0">-- Please Select Items --</option>
-                </select>
-                <span asp-validation-for="WithItemsIds" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="WithoutItemsIds" class="control-label">Without items</label>
-                <select asp-for="WithoutItemsIds" class="form-control" asp-items="ViewBag.Items">
-                    <option disabled selected value="0">-- Please Select Items --</option>
-                </select>
-                <span asp-validation-for="WithoutItemsIds" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CoursesIds" class="control-label">Courses</label>
-                <select asp-for="CoursesIds" class="form-control" asp-items="ViewBag.Courses">
-                    <option disabled selected value="0">-- Please Select Courses --</option>
-                </select>
-                <span asp-validation-for="CoursesIds" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="row clearfix">
+    <div class="col-lg-6" style="margin: 6px auto;">
+
+        <div class="card">
+            <div class="body">
+                <form asp-action="Create" class="form-horizontal">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div style="margin-top:25px" class="form-group">
+                        <div class="col-md-12">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input required asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div style="margin-top:25px" class="form-group">
+                        <div class="col-md-12">
+                            <label asp-for="Description" class="control-label"></label>
+                            <input required asp-for="Description" class="form-control" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div style="margin-top:25px" class="form-group">
+                        <div class="col-md-12">
+                            <label asp-for="PriceBefore" class="control-label"></label>
+                            <input type="number" asp-for="PriceBefore" class="form-control" />
+                            <span asp-validation-for="PriceBefore" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div style="margin-top:25px" class="form-group">
+                        <div class="col-md-12">
+                            <label asp-for="PriceAfter" class="control-label"></label>
+                            <input type="number" asp-for="PriceAfter" class="form-control" />
+                            <span asp-validation-for="PriceAfter" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div style="margin-top:25px" class="form-group">
+                        <div class="col-md-12">
+                            <label asp-for="QuestionsCount" class="control-label"></label>
+                            <input asp-for="QuestionsCount" class="form-control" />
+                            <span asp-validation-for="QuestionsCount" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div style="margin-top:25px" class="form-group">
+                        <div class="col-md-12">
+                            <label asp-for="WithItemsIds" class="control-label">With items</label>
+                            <select asp-for="WithItemsIds" class="form-control" asp-items="ViewBag.Items">
+                                <option disabled selected value="0">-- Please Select Items --</option>
+                            </select>
+                            <span asp-validation-for="WithItemsIds" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div style="margin-top:25px" class="form-group">
+                        <div class="col-md-12">
+                            <label asp-for="WithoutItemsIds" class="control-label">Without items</label>
+                            <select asp-for="WithoutItemsIds" class="form-control" asp-items="ViewBag.Items">
+                                <option disabled selected value="0">-- Please Select Items --</option>
+                            </select>
+                            <span asp-validation-for="WithoutItemsIds" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div style="margin-top:25px" class="form-group">
+                        <div class="col-md-12">
+                            <label asp-for="CoursesIds" class="control-label">Courses</label>
+                            <select asp-for="CoursesIds" class="form-control" asp-items="ViewBag.Courses">
+                                <option disabled selected value="0">-- Please Select Courses --</option>
+                            </select>
+                            <span asp-validation-for="CoursesIds" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12" style="text-align: center;">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {

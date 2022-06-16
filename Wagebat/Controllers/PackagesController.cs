@@ -266,15 +266,17 @@ namespace Wagebat.Controllers
         }
 
         // POST: Packages/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<JsonResult> DeleteConfirmed(int id)
         {
             var package = await _context.Packages.FindAsync(id);
+            if (package == null)
+                return Json(false);
+
             _context.Packages.Remove(package);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(true);
         }
 
         private bool PackageExists(int id)

@@ -49,7 +49,7 @@ namespace Wagebat.Controllers
                 .Include(t => t.Status)
                 .Include(t => t.Question)
                 .Include(t => t.Acceptor)
-                .Where(t => t.Acceptor.Id == currentUser.Id)
+                .Where(t => t.Acceptor.Id == currentUser.Id && t.Question.StatusId == 2)
                 .OrderBy(q => q.AnswerDate)
                 .ToListAsync();
 
@@ -190,6 +190,19 @@ namespace Wagebat.Controllers
                 .Where(s => s.UserId == currentUser.Id)
                 .SelectMany(s => s.Package.CoursePackages)
                 .Select(cp => cp.Course).ToListAsync();
+
+            if (userSubscription == null || question.Body == null)
+            {
+                if (userSubscription == null)
+                    ModelState.AddModelError(string.Empty, "Sorry, You don't have any available subscriptions!");
+
+                if (question.Body == null)
+                    ModelState.AddModelError(string.Empty, "Question field is Required!");
+
+                ViewData["Courses"] = new SelectList(courses, "Id", "Name");
+                ViewData["ShowMessage"] = false;
+                return View(question);
+            }
 
             if (userSubscription.Confirmer == null)
             {

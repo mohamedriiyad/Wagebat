@@ -56,21 +56,25 @@
                     <li><a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() =="Packages"? "active" : " ")" asp-action="Index" asp-controller="Packages">Pricing</a></li>
                     @if (User.IsInRole("user"))
                     {
-                        <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() =="StudentIndex"? "active" : " ")" asp-action="StudentIndex" asp-controller="Questions">History</a></li>
+                        <li class="dropdown">
+                            <a href="#"><span>Discover</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() =="StudentIndex"? "active" : " ")" asp-action="StudentIndex" asp-controller="Questions">History</a></li>
+                                <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "AppliedIndex" ? "active" : " ")" asp-action="AppliedIndex" asp-controller="Questions">Applied</a></li>
+                            </ul>
+                        </li>
                     }
                     @if (User.IsInRole("instructor"))
                     {
-                        <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() =="TransactionIndex" || ViewContext.RouteData.Values["controller"].ToString() == "Questions" && ViewContext.RouteData.Values["action"].ToString() == "Details"? "active" : " ")" asp-action="TransactionIndex" asp-controller="Questions">Questions</a></li>
-                        <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "InstructorIndex" ? "active" : " ")" asp-action="InstructorIndex" asp-controller="Questions">waiting</a></li>
+                        <li class="dropdown">
+                            <a href="#"><span>Discover</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() =="TransactionIndex" || ViewContext.RouteData.Values["controller"].ToString() == "Questions" && ViewContext.RouteData.Values["action"].ToString() == "Details"? "active" : " ")" asp-action="TransactionIndex" asp-controller="Questions">Questions</a></li>
+                                <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "InstructorIndex" ? "active" : " ")" asp-action="InstructorIndex" asp-controller="Questions">waiting</a></li>
+                                <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "AppliedIndex" ? "active" : " ")" asp-action="AppliedIndex" asp-controller="Questions">Applied</a></li>
+                            </ul>
+                        </li>
                     }
-                    <li class="dropdown">
-                        <a href="#"><span>Packages</span> <i class="bi bi-chevron-down"></i></a>
-                        <ul>
-                            <li><a href="#">Package 1</a></li>
-                            <li><a href="#">Package 2</a></li>
-                            <li><a href="#">Package 3</a></li>
-                        </ul>
-                    </li>
 
                     @if (User.IsInRole("admin"))
                     {

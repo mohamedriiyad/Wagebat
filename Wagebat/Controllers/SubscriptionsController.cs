@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -24,6 +25,7 @@ namespace Wagebat.Controllers
         }
 
         // GET: Subscriptions
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Subscriptions.Include(s => s.Confirmer).Include(s => s.Package).Include(s => s.Status).Include(s => s.User);
@@ -42,6 +44,7 @@ namespace Wagebat.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<JsonResult> Confirm (int? id)
         {
             if (id == null)
@@ -117,6 +120,7 @@ namespace Wagebat.Controllers
         }
 
         // GET: Subscriptions/Edit/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -141,6 +145,7 @@ namespace Wagebat.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,PackageId,StatusId,Date,ConfirmerId")] Subscription subscription)
         {
             if (id != subscription.Id)
@@ -176,6 +181,7 @@ namespace Wagebat.Controllers
         }
 
         // GET: Subscriptions/Delete/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -200,6 +206,7 @@ namespace Wagebat.Controllers
         // POST: Subscriptions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var subscription = await _context.Subscriptions.FindAsync(id);

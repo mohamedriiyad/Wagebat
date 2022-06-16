@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Wagebat.Models.Question>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var counter = 1;
+}
+
+<!-- ======= Frequently Asked Questions Section ======= -->
+<section id="faq" class="faq section-bg" style="margin-top: 74px">
+    <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+            <h2>Waited Questions</h2>
+            <p>These are all Questions which need your answer!</p>
+        </div>
+
+        <div class="faq-list">
+            <ul>
+                @foreach (var item in Model)
+                {
+
+                    <li style="border: groove; border-right: groove; border-left: groove;" data-aos="fade-up" data-aos-delay="200">
+                        <i class="bx bx-help-circle icon-help"></i>
+                        <a data-bs-toggle="collapse" data-bs-target="#faq-list-@item.Id" class="collapsed">
+                            <div style="height: 2em; padding: 3px; overflow: hidden; margin-top: 16px; display: inline-block;">
+                                @Html.Raw(item.Body)
+                            </div>
+                            <i class="bx icon-close" style="margin-top: 15px"></i>
+                            <i class="bx icon-close" style="margin-top: 15px; right: 61px;">
+                                <a asp-action="Create" asp-controller="Transactions" asp-route-id="@item.Id" class="btn-block">Answer ||</a>
+                            </i>
+
+                            <i class="bx icon-close" style="margin-top: 15px">
+                                <a asp-action="Details" asp-controller="Questions" asp-route-id="@item.Id" class="btn-block">Details</a>
+                            </i>
+
+                            <i class="bx icon-show" style="margin-right: 75px">@item.Status.Name</i>
+                        </a>
+                        <div id="faq-list-@item.Id" class="collapse" data-bs-parent=".faq-list">
+                            <p>
+                                @item.Status.Name
+                            </p>
+                        </div>
+
+                    </li>
+                }
+            </ul>
+        </div>
+
+    </div>
+</section><!-- End Frequently Asked Questions Section -->

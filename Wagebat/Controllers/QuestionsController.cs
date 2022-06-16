@@ -96,6 +96,28 @@ namespace Wagebat.Controllers
             return View(questions);
         }
 
+        public async Task<IActionResult> AppliedIndex()
+        {
+            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var ids = _context.ApplicationUsers
+                .SelectMany(u => u.Courses.Select(c => c.Id)).ToList();
+
+            var questions = await _context.Questions
+                .Include(q => q.Status)
+                .Include(q => q.Subscription)
+                .Include(q => q.User)
+                .ThenInclude(u => u.Courses)
+                .Where(q => ids.Any(id => id == q.CourseId) && q.StatusId == 3)
+                .OrderBy(q => q.Date)
+                .ToListAsync();
+            foreach (var item in questions)
+            {
+                item.Body = WebUtility.HtmlDecode(item.Body);
+            }
+            return View(questions);
+        }
+
 
         // GET: Questions/Details/5
         public async Task<IActionResult> Details(int? id)

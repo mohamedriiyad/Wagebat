@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,7 @@ namespace Wagebat.Controllers
         }
 
         // GET: Packages/Details/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -50,6 +52,7 @@ namespace Wagebat.Controllers
         }
 
         // GET: Packages/Create
+        [Authorize(Roles = "admin")]
         public IActionResult Create()
         {
             ViewData["Items"] = new SelectList( _context.Items.ToList(), "Id", "Name");
@@ -62,6 +65,7 @@ namespace Wagebat.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create(PackageInput input)
         {
             if (!ModelState.IsValid)
@@ -123,6 +127,7 @@ namespace Wagebat.Controllers
         }
 
         // GET: Packages/Edit/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -159,6 +164,7 @@ namespace Wagebat.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int id, PackageInput input)
         {
             if (id != input.Id)
@@ -241,6 +247,7 @@ namespace Wagebat.Controllers
         }
 
         // GET: Packages/Delete/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -261,6 +268,7 @@ namespace Wagebat.Controllers
         // POST: Packages/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var package = await _context.Packages.FindAsync(id);

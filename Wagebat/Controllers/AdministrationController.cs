@@ -24,6 +24,7 @@ namespace Wagebat.Controllers
         }
 
         // GET: AdministrationController
+        [Authorize(Roles = "admin")]
         public ActionResult Index()
         {
             var users = _userManager.Users.Select(u => new UserListVM
@@ -37,9 +38,11 @@ namespace Wagebat.Controllers
             return View(users);
         }
 
+        [Authorize(Roles = "admin")]
         public IActionResult Create() => View();
 
 
+        [Authorize(Roles = "instructor,admin")]
         public IActionResult CreateCourse() 
         {
             ViewData["Courses"] = new SelectList(_db.Courses, "Id", "Name");
@@ -48,6 +51,7 @@ namespace Wagebat.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "instructor,admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCourse(InstructorCourseInput input)
         { 
@@ -85,6 +89,7 @@ namespace Wagebat.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create(UserInputVM input)
         {
             if (ModelState.IsValid)
@@ -107,6 +112,7 @@ namespace Wagebat.Controllers
             return View(input);
         }
         // GET: AdministrationController/Details/5
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Details(string id)
         {
             var userInDb = await FindByIdAsync(id);
@@ -124,6 +130,7 @@ namespace Wagebat.Controllers
         }
 
 
+        [Authorize(Roles = "admin")]
         // GET: AdministrationController/Delete/5
         public async Task<ActionResult> Delete(string id)
         {
@@ -143,6 +150,7 @@ namespace Wagebat.Controllers
 
         // POST: AdministrationController/Delete/5
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<JsonResult> DeleteConfirmed(string id)
         {
             var result = false;
@@ -156,6 +164,7 @@ namespace Wagebat.Controllers
             return Json(result);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Edit(string id)
         {
             var userInDb = await FindByIdAsync(id);
@@ -171,34 +180,36 @@ namespace Wagebat.Controllers
             return View(user);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Edit(UserEditVM input)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(input);
-        //    }
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> Edit(UserEditVM input)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(input);
+            }
 
-        //    var userInDb = await _db.Users.FindAsync(input.Id);
-        //    userInDb.Email = input.Email;
-        //    userInDb.PhoneNumber = input.PhoneNumber;
-        //    await _db.SaveChangesAsync();
+            var userInDb = await _db.ApplicationUsers.FindAsync(input.Id);
+            userInDb.Email = input.Email;
+            userInDb.PhoneNumber = input.PhoneNumber;
+            await _db.SaveChangesAsync();
 
-        //    var token = await _userManager.GeneratePasswordResetTokenAsync(userInDb);
-        //    var changePasswordResult = await _userManager.ResetPasswordAsync(userInDb, token, input.NewPassword); 
-        //    if (!changePasswordResult.Succeeded)
-        //    {
-        //        foreach (var error in changePasswordResult.Errors)
-        //        {
-        //            ModelState.AddModelError(string.Empty, error.Description);
-        //        }
-        //        return View(input);
-        //    }
+            var token = await _userManager.GeneratePasswordResetTokenAsync(userInDb);
+            var changePasswordResult = await _userManager.ResetPasswordAsync(userInDb, token, input.NewPassword);
+            if (!changePasswordResult.Succeeded)
+            {
+                foreach (var error in changePasswordResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View(input);
+            }
 
 
-        //    return RedirectToAction("Index");
-        //}
+            return RedirectToAction("Index");
+        }
 
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> UserEdit()
         {
             var userInDb = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -215,6 +226,7 @@ namespace Wagebat.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> UserEdit(UserSelfEditVM input)
         {
             if (!ModelState.IsValid)

@@ -137,14 +137,17 @@ namespace Wagebat.Controllers
         }
 
         // POST: Levels/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        public async Task<JsonResult> DeleteConfirmed(int id)
         {
             var level = await _context.Levels.FindAsync(id);
+            if (level == null)
+                return Json(false);
+
             _context.Levels.Remove(level);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(true);
         }
 
         private bool LevelExists(int id)

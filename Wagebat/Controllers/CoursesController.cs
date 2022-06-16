@@ -67,8 +67,8 @@ namespace Wagebat.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewData["LevelId"] = new SelectList(_context.Levels, "Id", "Id", input.LevelId);
-                ViewData["UniversityId"] = new SelectList(_context.Universities, "Id", "Id", input.UniversityId);
+                ViewData["LevelId"] = new SelectList(_context.Levels, "Id", "Name");
+                ViewData["UniversityId"] = new SelectList(_context.Universities, "Id", "Name");
                 ViewData["Categories"] = new SelectList(_context.Categories, "Id", "Name");
                 return View(input);
             }
@@ -102,8 +102,8 @@ namespace Wagebat.Controllers
             {
                 return NotFound();
             }
-            ViewData["LevelId"] = new SelectList(_context.Levels, "Id", "Id", course.LevelId);
-            ViewData["UniversityId"] = new SelectList(_context.Universities, "Id", "Id", course.UniversityId);
+            ViewData["LevelId"] = new SelectList(_context.Levels, "Id", "Name");
+            ViewData["UniversityId"] = new SelectList(_context.Universities, "Id", "Name");
             return View(course);
         }
 
@@ -165,14 +165,17 @@ namespace Wagebat.Controllers
         }
 
         // POST: Courses/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        public async Task<JsonResult> DeleteConfirmed(int id)
         {
             var course = await _context.Courses.FindAsync(id);
+            if (course == null)
+                return Json(false);
+
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(true);
         }
 
         private bool CourseExists(int id)

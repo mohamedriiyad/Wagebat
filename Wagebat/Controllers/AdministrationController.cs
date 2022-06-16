@@ -209,7 +209,7 @@ namespace Wagebat.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize]
         public async Task<ActionResult> UserEdit()
         {
             var userInDb = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -226,7 +226,7 @@ namespace Wagebat.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        [Authorize]
         public async Task<IActionResult> UserEdit(UserSelfEditVM input)
         {
             if (!ModelState.IsValid)

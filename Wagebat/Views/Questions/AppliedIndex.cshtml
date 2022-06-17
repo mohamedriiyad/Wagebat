@@ -27,13 +27,22 @@
                                 @Html.Raw(item.Body)
                             </div>
                             <i class="bx icon-close" style="margin-top: 15px"></i>
-                            <i class="bx icon-close" style="margin-top: 15px; right: 61px;">
-                                <a asp-action="Create" asp-controller="Transactions" asp-route-id="@item.Id" class="btn-block">Answer ||</a>
-                            </i>
+                            @if (User.IsInRole("user"))
+                            {
+                                <i class="bx icon-close" style="margin-top: 15px">
+                                    <a asp-action="Details" asp-controller="Questions" asp-route-id="@item.Id" class="btn-block">Details</a>
+                                </i>
+                            }
+                            @if (User.IsInRole("instructor"))
+                            {
+                                <i class="bx icon-close" style="margin-top: 15px; right: 61px;">
+                                    <a asp-action="Create" asp-controller="Transactions" asp-route-id="@item.Id" class="btn-block">Answer ||</a>
+                                </i>
 
-                            <i class="bx icon-close" style="margin-top: 15px">
-                                <a asp-action="Details" asp-controller="Questions" asp-route-id="@item.Id" class="btn-block">Details</a>
-                            </i>
+                                <i class="bx icon-close" style="margin-top: 15px">
+                                    <a asp-action="Details" asp-controller="Questions" asp-route-id="@item.Id" class="btn-block">Details</a>
+                                </i>
+                            }
 
                             <i class="bx icon-show" style="margin-right: 75px">@item.Status.Name</i>
                         </a>

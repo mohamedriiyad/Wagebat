@@ -24,7 +24,12 @@
                 <div>
                     <hr />
                     <dl class="row">
-
+                        <dt class="col-sm-2">
+                            By
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.Question.User.UserName)
+                        </dd>
                         <dt class="col-sm-2">
                             @Html.DisplayNameFor(model => model.Question.Status)
                         </dt>
@@ -124,6 +129,12 @@
                         <hr />
                         <dl class="row">
                             <dt class="col-sm-2">
+                                By
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.Acceptor.UserName)
+                            </dd>
+                            <dt class="col-sm-2">
                                 Date
                             </dt>
                             <dd class="col-sm-10">
@@ -143,11 +154,13 @@
                             <a href="#" style="margin-left: 15px; margin-right: 5px;" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Comment" onclick="confirm('@Model.Id', '@Model.QuestionId')">Comment</a>
                             @if (Model.Review == null || Model.Review.Liked == false)
                             {
-                                <a asp-controller="Reviews" asp-action="Create" asp-route-id="@Model.Id" style="margin-left: 5px" data-target=".bd-example-modal-sm" title="Like" onclick="confirm('@Model.Id', '@Model.QuestionId')"><i class="bi bi-hand-thumbs-up"></i> Like</a>
+                                <a id="like" href="#" style="margin-left: 5px" title="Like" onclick="like(event ,'@Model.Id', true)"><i class="bi bi-hand-thumbs-up"></i> Like</a>
+                                <a id="liked" href="#" style="margin-left: 5px; font-weight: bold; color: #37517e; display:none;" title="Like" onclick="like(event ,'@Model.Id', false)"><i class="bi bi-hand-thumbs-up"></i> Liked</a>
                             }
                             else if (Model.Review.Liked == true)
                             {
-                                <a asp-controller="Reviews" asp-action="Create" asp-route-id="@Model.Id" style="margin-left: 5px; font-weight: bold; color: #37517e;" data-target=".bd-example-modal-sm" title="Like" onclick="confirm('@Model.Id', '@Model.QuestionId')"><i class="bi bi-hand-thumbs-up"></i> Liked</a>
+                                <a id="liked" href="#" style="margin-left: 5px; font-weight: bold; color: #37517e;" title="Like" onclick="like(event ,'@Model.Id', false)"><i class="bi bi-hand-thumbs-up"></i> Liked</a>
+                                <a id="like" href="#" style="margin-left: 5px; display:none;" title="Like" onclick="like(event ,'@Model.Id', true)"><i class="bi bi-hand-thumbs-up"></i> Like</a>
                             }
                         </div>
 
@@ -226,7 +239,7 @@
                 </div>
 
                 <div class="faq-list">
-                    <ul>
+                    <ul id="comments">
                         @foreach (var item in Model.Comments)
                         {
 
@@ -240,11 +253,7 @@
                                     <i class="bx icon-close" style="margin-right: 75px">@item.Date</i>
                                     <i class="bx bx-chevron-up icon-close"></i>
                                 </a>
-                                <div id="faq-list-@item.Id" class="collapse" data-bs-parent=".faq-list">
-                                    <p>
-                                        Hollo
-                                    </p>
-                                </div>
+                                <div id="faq-list-@item.Id" class="collapse" data-bs-parent=".faq-list"></div>
                             </li>
                         }
                     </ul>
@@ -252,13 +261,14 @@
             }
 
 
-            @*<div class="row">
+            <div class="row">
                 <a href="#" style="text-align: center" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Delete" onclick="confirm('@Model.Id', '@Model.QuestionId')">Add Comment</a>
-            </div>*@
+            </div>
         }
 
         <input type="hidden" id="orderId" />
         <input type="hidden" id="questionId" />
+        <input type="hidden" id="userName" value="@User.Identity.Name" />
 
     </div>
 </section><!-- End Frequently Asked Questions Section -->
@@ -281,25 +291,79 @@
 </div>
 @section Scripts {
     <script type="text/javascript">
+        var liked = false;
+        var counter = 10000;
+
+        var like = function (event, _id, liked) {
+            this.liked = liked;
+            event.preventDefault();
+            var x = document.getElementById("like");
+            var y = document.getElementById("liked");
+            if (liked) {
+                x.style.display = "none";
+                y.style.display = "inline";
+            } else {
+                x.style.display = "inline";
+                y.style.display = "none";
+            }
+
+            $.ajax({
+                type: "GET",
+                url: "/Reviews/Create",
+                data: { id: _id },
+                success: function (result) {
+                    if (result) {
+                        $("#deleteModal").fadeOut(500);
+                        $("#orderId").val(null);
+                        //window.location.href = "/Questions/details/" + questionId;
+
+                        console.log("hi")
+                    } else {
+                        alert("Something went wrong or comment field is empty.");
+                    }
+                }
+            });
+        }
         var confirm = function (id, questionId) {
             document.getElementById("orderId").value = id;
             document.getElementById("questionId").value = questionId;
-            console.log(questionId)
         }
 
         var deleteOrder = function () {
             var _id = $("#orderId").val();
+            var _name = $("#userName").val();
             var questionId = document.getElementById("questionId").value;
             var _comment = $("#comment").val();
+            var rndm = Math.random();
+            $("#comments").append(`<li id="${rndm}" class="comment" data-aos="fade-up" data-aos-delay="200">
+                                <i class="bx bx-alarm-exclamation icon-help"></i>
+                                <a data-bs-toggle="collapse" data-bs-target="#faq-list-${counter}" class="collapsed">
+                                    ${_comment}
+                                    <i class="bx icon-show" style="margin-right: 75px">${_name}</i>
+                                    <i class="bx bx-chevron-down icon-show"></i>
+
+                                    <i class="bx icon-close" style="margin-right: 75px">${new Date(Date.now()).toLocaleString()}</i>
+                                    <i class="bx bx-chevron-up icon-close"></i>
+                                    </a>
+                                    <div id="faq-list-${counter++}" class="collapse" data-bs-parent=".faq-list">
+                                    </div>
+                            </li>`);
+
             $.ajax({
                 type: "POST",
                 url: "/Comments/Create",
                 data: { body: _comment, id: _id },
                 success: function (result) {
                     if (result) {
-                        $("#deleteModal").fadeOut(500);
+                        $("#mod").fadeOut(100);
+                        $(".modal-backdrop").fadeOut(100);
                         $("#orderId").val(null);
-                        window.location.href = "/Questions/details/" + questionId;
+                        window.scrollTo({
+                            top: $('#footer').offset().top - 700,
+                            behavior: 'smooth'
+                        })
+                        $("#comment").val('');
+                        //window.location.href = "/Questions/details/" + questionId;
                     } else {
                         alert("Something went wrong or comment field is empty.");
                     }

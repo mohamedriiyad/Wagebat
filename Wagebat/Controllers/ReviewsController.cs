@@ -62,12 +62,14 @@ namespace Wagebat.Controllers
         //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int id)
+        public async Task<JsonResult> Create(int id)
         {
             var transaction = await _context.Transactions
                 .Include(t => t.Question)
                 .Include(t => t.Review)
                 .FirstOrDefaultAsync(t => t.Id == id);
+            if(transaction == null)
+                return Json(false);
 
             if (transaction.Review != null)
             {
@@ -75,14 +77,14 @@ namespace Wagebat.Controllers
                     transaction.Review.Liked = false;
                 else if (transaction.Review.Liked == false)
                     transaction.Review.Liked = true;
-                else return NotFound();
+                else return Json(false);
             }
             else
                 transaction.Review = new Review{ Liked = true, User = await _userManager.GetUserAsync(User) };
 
             _context.Transactions.Update(transaction);
             _context.SaveChanges();
-            return RedirectToAction("Details", "Questions", new { id = transaction.Question.Id });
+            return Json(true);
         }
 
         // GET: Reviews/Edit/5

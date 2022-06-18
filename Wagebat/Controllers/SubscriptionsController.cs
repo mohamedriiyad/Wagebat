@@ -134,7 +134,7 @@ namespace Wagebat.Controllers
         {
             var body = "نحيطكم علما بأن الضحك مستمر ";
             string from = "anabolbol645@gmail.com";
-            string password = "010048192209095";
+            string password = "";
             MailMessage msg = new MailMessage
             {
                 Subject = "Video Conference",

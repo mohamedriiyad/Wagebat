@@ -39,6 +39,13 @@ namespace Wagebat.Data
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<ApplicationUser>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+            builder.Entity<ApplicationUser>()
+                .HasIndex(u => u.PhoneNumber)
+                .IsUnique();
+
             builder.Entity<CategoryCourse>()
                 .HasKey(prop => new { prop.CourseId, prop.CategoryId });
             builder.Entity<CategoryCourse>()

@@ -93,52 +93,63 @@ namespace Wagebat.Areas.Identity.Pages.Account
             if (!ModelState.IsValid)
                 // If we got this far, something failed, redisplay form
                 return Page();
-            
+
             string roleName = Input.RoleId == 0 ? "instructor" : "user";
             if (!await _roleManager.RoleExistsAsync(roleName))
                 await _roleManager.CreateAsync(new IdentityRole(roleName));
-
-            var user = new ApplicationUser
+            var phoneExist = _db.ApplicationUsers.Where(u => u.PhoneNumber == Input.PhoneNumber).FirstOrDefault();
+            if (phoneExist != null)
             {
-                UserName = Input.Username,
-                Email = Input.Email,
-                PhoneNumber = Input.PhoneNumber
-            };
-            var result = await _userManager.CreateAsync(user, Input.Password);
-            if (result.Succeeded)
-            {
-                _logger.LogInformation("User created a new account with password.");
-                await _userManager.AddToRoleAsync(user, roleName);
-
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = Url.Page(
-                    "/Account/ConfirmEmail",
-                    pageHandler: null,
-                    values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
-                    protocol: Request.Scheme);
-
-                //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                if (Input.RoleId == 0)
-                {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("CreateCourse", "Administration");
-                }
-                else
-                {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect(returnUrl);
-                }
-            }
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
+                ModelState.AddModelError(string.Empty, "This Phone Number Already Exist!");
+                return Page();
             }
 
-            // If we got this far, something failed, redisplay form
-            return Page();
+            var user = new ApplicationUser { UserName = Input.Username, Email = Input.Email, PhoneNumber = Input.PhoneNumber };
+            IdentityResult result;
+            try
+            {
+                result = await _userManager.CreateAsync(user, Input.Password);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "This Email Already Exist!");
+                return Page();
+            }
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+                // If we got this far, something failed, redisplay form
+                return Page();
+            }
+            _logger.LogInformation("User created a new account with password.");
+            await _userManager.AddToRoleAsync(user, roleName);
+
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            var callbackUrl = Url.Page(
+                "/Account/ConfirmEmail",
+                pageHandler: null,
+                values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
+                protocol: Request.Scheme);
+
+            //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+            //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+            if (Input.RoleId == 0)
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("CreateCourse", "Administration");
+            }
+            else
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return LocalRedirect(returnUrl);
+            }
         }
     }
 }

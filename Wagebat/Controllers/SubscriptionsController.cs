@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -123,9 +125,33 @@ namespace Wagebat.Controllers
                 StatusId = 1,
             };
 
+            SendSubscriptionEmail();
             _context.Add(subscription);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+        public void SendSubscriptionEmail()
+        {
+            var body = "نحيطكم علما بأن الضحك مستمر ";
+            string from = "anabolbol645@gmail.com";
+            string password = "010048192209095";
+            MailMessage msg = new MailMessage
+            {
+                Subject = "Video Conference",
+                Body = body,
+                From = new MailAddress(from)
+            };
+            msg.To.Add(new MailAddress("mohamedriiyad@gmail.com"));
+
+            SmtpClient smtp = new SmtpClient();
+            smtp.UseDefaultCredentials = true;
+            smtp.Host = "smtp.gmail.com";
+            smtp.Port = 587;
+            smtp.EnableSsl = true;
+            
+            NetworkCredential nc = new NetworkCredential(from, password);
+            smtp.Credentials = nc;
+            smtp.Send(msg);
         }
 
         // GET: Subscriptions/Edit/5

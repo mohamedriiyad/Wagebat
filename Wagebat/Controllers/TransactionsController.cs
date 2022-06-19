@@ -71,6 +71,7 @@ namespace Wagebat.Controllers
         public async Task<IActionResult> Create(Transaction transaction, List<IFormFile> files)
         {
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            Transaction transactionInput;
             if (transaction.Answer == null || !ModelState.IsValid)
             {
                 if (transaction.Answer == null)
@@ -92,15 +93,34 @@ namespace Wagebat.Controllers
                     return BadRequest("There is somthing wrong when adding the attachments!");
                 }
             }
+            var transactionInDb = _context.Transactions
+                .Where(t => t.QuestionId == transaction.QuestionId)
+                .FirstOrDefault();
 
-            var newTransaction = new Transaction
+            if(transactionInDb != null)
             {
-                Answer = transaction.Answer,
-                QuestionId = transaction.QuestionId,
-                AcceptedBy = currentUser.Id,
-                StatusId = 2,
-                AnswerDate = DateTime.Now
-            };
+                var status = await _context.Statuses.FindAsync(2);
+                if (status == null)
+                    return BadRequest("Add your default statuses first!");
+                transactionInDb.Answer = transaction.Answer;
+                transactionInDb.QuestionId = transaction.QuestionId;
+                transactionInDb.AcceptedBy = currentUser.Id;
+                transactionInDb.Status = status;
+                transactionInDb.AnswerDate = DateTime.Now;
+                transactionInput = transactionInDb;
+            }
+            else
+            {
+                var newTransaction = new Transaction
+                {
+                    Answer = transaction.Answer,
+                    QuestionId = transaction.QuestionId,
+                    AcceptedBy = currentUser.Id,
+                    StatusId = 2,
+                    AnswerDate = DateTime.Now
+                };
+                transactionInput = transaction;
+            }
 
             var questionInDb = await _context.Questions.FindAsync(transaction.QuestionId);
             questionInDb.StatusId = 2;
@@ -108,16 +128,19 @@ namespace Wagebat.Controllers
             await _context.SaveChangesAsync();
             var stat = _context.Questions.FindAsync(transaction.QuestionId);
 
-            newTransaction.Answer = WebUtility.HtmlEncode(transaction.Answer);
+            transactionInput.Answer = WebUtility.HtmlEncode(transaction.Answer);
             foreach (var attatchment in attatchments)
             {
-                newTransaction.TransactionAttachments.Add(new TransactionAttachment { Path = attatchment });
+                transactionInput.TransactionAttachments.Add(new TransactionAttachment { Path = attatchment });
             }
 
             ViewData["ShowMessage"] = true;
-            _context.Add(newTransaction);
+            if (transactionInDb != null)
+                _context.Transactions.Update(transactionInput);
+            else
+                _context.Add(transactionInput);
             await _context.SaveChangesAsync();
-            return View(newTransaction);
+            return View(transactionInput);
         }
 
         // GET: Transactions/Edit/5

@@ -80,10 +80,16 @@
                     {
                         <li><a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() =="index"? "active" : " ")" asp-action="Index" asp-controller="Administration">Admin</a></li>
                     }
+
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li><a class="getstarted" asp-area="Identity" asp-page="/Account/Logout">Logout</a></li>
-                        <li><a class="getstarted" asp-action="UserEdit" asp-controller="Administration">Edit Info</a></li>
+                        <li class="dropdown">
+                            <a class="getstarted" href="#"><span>Welcome @User.Identity.Name</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a class="nav-link" asp-area="Identity" asp-page="/Account/Logout">Logout</a></li>
+                                <li><a class="nav-link" asp-action="UserEdit" asp-controller="Administration">Edit Info</a></li>
+                            </ul>
+                        </li>
                     }
                     else
                     {

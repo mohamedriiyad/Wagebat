@@ -124,29 +124,34 @@ namespace Wagebat.Controllers
                 PackageId = package.Id,
                 StatusId = 1,
             };
-
-            SendSubscriptionEmail();
+            try
+            {
+                SendSubscriptionEmail(currentUser.Email);
+            }
+            catch (Exception ex)
+            {}
+            
             _context.Add(subscription);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        public void SendSubscriptionEmail()
+        public void SendSubscriptionEmail(string email)
         {
             var body = "نحيطكم علما بأن الضحك مستمر ";
-            string from = "anabolbol645@gmail.com";
-            string password = "";
+            string from = "trepletech@outlook.com";
+            string password = "M_o0123456";
             MailMessage msg = new MailMessage
             {
                 Subject = "Video Conference",
                 Body = body,
                 From = new MailAddress(from)
             };
-            msg.To.Add(new MailAddress("mohamedriiyad@gmail.com"));
+            msg.To.Add(new MailAddress(email));
 
-            SmtpClient smtp = new SmtpClient();
-            smtp.UseDefaultCredentials = true;
-            smtp.Host = "smtp.gmail.com";
+            SmtpClient smtp = new SmtpClient("smtp-mail.outlook.com");
             smtp.Port = 587;
+            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtp.UseDefaultCredentials = false;
             smtp.EnableSsl = true;
             
             NetworkCredential nc = new NetworkCredential(from, password);

@@ -13,8 +13,8 @@
         <div class="login-form">
             <!-- logo-login -->
             @*<div class="logo-login">
-                    <a href="index.html"><img src="~/assets/img/logo/loder.png" alt=""></a>
-                </div>*@
+            <a href="index.html"><img src="~/assets/img/logo/loder.png" alt=""></a>
+        </div>*@
             <h2>Edit your INFO</h2>
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-input">
@@ -40,6 +40,8 @@
             <div class="form-input pt-30">
                 <input type="submit" value="Reset">
             </div>
+
+            <a style="display: inline;" asp-action="Index" asp-controller="Home" class="forget">HOME</a>
         </div>
     </form>
     <!-- /end login form -->

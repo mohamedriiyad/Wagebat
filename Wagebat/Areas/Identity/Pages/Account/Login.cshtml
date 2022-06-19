@@ -9,7 +9,7 @@
     <!-- Login Admin -->
     <form class="form-default" id="account" method="post">
 
-        <div class="login-form">
+        <div style=" padding-bottom: 17px;" class="login-form">
 
             <h2>Login Here</h2>
             <div asp-validation-summary="All" class="text-danger"></div>
@@ -26,9 +26,9 @@
             </div>
 
             <!-- Forget Password -->
-            @*<a href="#" class="forget">Forget Password</a>*@
+            <a style="display: inline;" asp-action="Index" asp-controller="Home" class="forget">HOME</a>
             <!-- Forget Password -->
-            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="registration">Registration</a>
+            <a style="display: inline; float: right;" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="registration">Registration</a>
         </div>
     </form>
     <!-- /end login form -->

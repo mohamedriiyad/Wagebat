@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,6 +16,7 @@ using Wagebat.Models;
 
 namespace Wagebat.Controllers
 {
+    [Authorize]
     public class QuestionsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -120,6 +122,7 @@ namespace Wagebat.Controllers
 
 
         // GET: Questions/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -158,6 +161,7 @@ namespace Wagebat.Controllers
         }
 
         // GET: Questions/Create
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);

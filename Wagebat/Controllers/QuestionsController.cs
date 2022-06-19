@@ -203,10 +203,14 @@ namespace Wagebat.Controllers
                 .Select(cp => cp.Course)
                 .Distinct()
                 .ToListAsync();
+            var universities = await _context.Universities.ToListAsync();
+            var levels = await _context.Levels.ToListAsync();
 
             ViewData["ShowMessage"] = false;
             ViewData["Message"] = "You have " + (pakagesQCount - userQCount) + " Questions Left!";
             ViewData["Courses"] = new SelectList(courses, "Id", "Name");
+            ViewData["Universities"] = new SelectList(universities, "Id", "Name");
+            ViewData["Levels"] = new SelectList(levels, "Id", "Name");
             return View();
         }
 
@@ -231,17 +235,20 @@ namespace Wagebat.Controllers
                 .Where(s => s.UserId == currentUser.Id)
                 .SelectMany(s => s.Package.CoursePackages)
                 .Select(cp => cp.Course).ToListAsync();
+            var universities = await _context.Universities.ToListAsync();
+            var levels = await _context.Levels.ToListAsync();
 
             if (userSubscriptions.Count < 1 || question.Body == null)
             {
-                if (userSubscriptions == null)
+                if (userSubscriptions.Count < 1)
                     ModelState.AddModelError(string.Empty, "Sorry, You don't have any available subscriptions! or Your subscription doesn't confirmed yet!");
 
                 if (question.Body == null)
                     ModelState.AddModelError(string.Empty, "Question field is Required!");
 
-                ViewData["Courses"] = new SelectList(courses, "Id", "Name");
                 ViewData["ShowMessage"] = false;
+                ViewData["Universities"] = new SelectList(universities, "Id", "Name");
+                ViewData["Levels"] = new SelectList(levels, "Id", "Name");
                 return View(question);
             }
 
@@ -250,6 +257,15 @@ namespace Wagebat.Controllers
             foreach (var subscription in userSubscriptions)
             {
                 pakagesQCount += subscription.Package.QuestionsCount;
+            }
+            if(pakagesQCount - userQCount <= 0)
+            {
+                ModelState.AddModelError(string.Empty, "Sorry, You don't have any available subscriptions! or Your subscription doesn't confirmed yet!");
+
+                ViewData["ShowMessage"] = false;
+                ViewData["Universities"] = new SelectList(universities, "Id", "Name");
+                ViewData["Levels"] = new SelectList(levels, "Id", "Name");
+                return View(question);
             }
 
             var pathToSave = Path.Combine("images", "questions");
@@ -281,7 +297,8 @@ namespace Wagebat.Controllers
 
             ViewData["ShowMessage"] = true;
             ViewData["Message"] = "You have " + (pakagesQCount - userQCount - 1) + " Questions Left!";
-            ViewData["Courses"] = new SelectList(_context.Courses, "Id", "Name");
+            ViewData["Universities"] = new SelectList(universities, "Id", "Name");
+            ViewData["Levels"] = new SelectList(levels, "Id", "Name");
             return View();
         }
 

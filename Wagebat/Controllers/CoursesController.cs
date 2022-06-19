@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using Wagebat.Data;
 using Wagebat.Models;
 using Wagebat.ViewModels;
+using Wagebat.ViewModels.Courses;
 
 namespace Wagebat.Controllers
 {
-    [Authorize(Roles = "admin")]
     public class CoursesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -23,6 +23,7 @@ namespace Wagebat.Controllers
         }
 
         // GET: Courses
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Courses.Include(c => c.Level).Include(c => c.University);
@@ -30,6 +31,7 @@ namespace Wagebat.Controllers
         }
 
         // GET: Courses/Details/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -50,6 +52,7 @@ namespace Wagebat.Controllers
         }
 
         // GET: Courses/Create
+        [Authorize(Roles = "admin")]
         public IActionResult Create()
         {
             ViewData["Levels"] = new SelectList(_context.Levels, "Id", "Name");
@@ -63,6 +66,7 @@ namespace Wagebat.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create(CourseInput input)
         {
             if (!ModelState.IsValid)
@@ -90,6 +94,7 @@ namespace Wagebat.Controllers
         }
 
         // GET: Courses/Edit/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -112,6 +117,7 @@ namespace Wagebat.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Code,LevelId,UniversityId")] Course course)
         {
             if (id != course.Id)
@@ -145,6 +151,7 @@ namespace Wagebat.Controllers
         }
 
         // GET: Courses/Delete/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -181,6 +188,21 @@ namespace Wagebat.Controllers
         private bool CourseExists(int id)
         {
             return _context.Courses.Any(e => e.Id == id);
+        }
+        [HttpGet]
+        public JsonResult Courses()
+        {
+            var Courses = (from u in _context.Universities
+                              join c in _context.Courses on u.Id equals c.UniversityId
+                              join l in _context.Levels on c.LevelId equals l.Id
+                              select new CoursesSelectList
+                              {
+                                  UniversityId = u.Id,
+                                  CourseId = c.Id,
+                                  CourseName = c.Name,
+                                  LevelId = l.Id,
+                              }).ToList();
+            return Json(Courses);
         }
     }
 }

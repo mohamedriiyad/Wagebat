@@ -52,7 +52,7 @@ namespace Wagebat.Controllers
                 .Include(t => t.Question)
                 .Include(t => t.Acceptor)
                 .Where(t => t.Acceptor.Id == currentUser.Id && t.Question.StatusId == 2)
-                .OrderBy(q => q.AnswerDate)
+                .OrderByDescending(q => q.AnswerDate)
                 .ToListAsync();
 
             foreach (var item in transactions)
@@ -71,7 +71,7 @@ namespace Wagebat.Controllers
                 .Include(q => q.Subscription)
                 .Include(q => q.User)
                 .Where(q => q.UserId == currentUser.Id)
-                .OrderBy(q => q.Date)
+                .OrderByDescending(q => q.Date)
                 .ToListAsync();
             foreach (var item in questions)
             {
@@ -82,15 +82,17 @@ namespace Wagebat.Controllers
         public async Task<IActionResult> InstructorIndex()
         {
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
-            var ids = _context.ApplicationUsers.SelectMany(u => u.Courses.Select(c => c.Id)).ToList();
+            var ids = _context.ApplicationUsers
+                .Where(u =>u.Id == currentUser.Id)
+                .SelectMany(u => u.Courses.Select(c => c.Id))
+                .ToList();
+
             var questions = await _context.Questions
                 .Include(q => q.Status)
-                .Include(q => q.Subscription)
-                .Include(q => q.User)
-                .ThenInclude(u => u.Courses)
                 .Where(q => ids.Any(id => id == q.CourseId) && q.StatusId == 1)
-                .OrderBy(q => q.Date)
+                .OrderByDescending(q => q.Date)
                 .ToListAsync();
+
             foreach (var item in questions)
             {
                 item.Body = WebUtility.HtmlDecode(item.Body);
@@ -103,16 +105,28 @@ namespace Wagebat.Controllers
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
 
             var ids = _context.ApplicationUsers
-                .SelectMany(u => u.Courses.Select(c => c.Id)).ToList();
-
-            var questions = await _context.Questions
+                .SelectMany(u => u.Courses.Select(c => c.Id))
+                .ToList();
+            List<Question> questions = new List<Question>();
+            if (User.IsInRole("instructor"))
+            {
+                questions =  await _context.Transactions
+                    .Include(t => t.Question)
+                    .Include(t => t.Question.Status)
+                    .Where(t => ids.Any(id => id == t.Question.CourseId) && t.Question.StatusId == 3 && t.AcceptedBy == currentUser.Id)
+                    .Select(t => t.Question)
+                    .OrderByDescending(q => q.Date)
+                    .ToListAsync();
+            }
+            else if (User.IsInRole("user"))
+            {
+                questions = await _context.Questions
                 .Include(q => q.Status)
-                .Include(q => q.Subscription)
-                .Include(q => q.User)
-                .ThenInclude(u => u.Courses)
-                .Where(q => ids.Any(id => id == q.CourseId) && q.StatusId == 3)
-                .OrderBy(q => q.Date)
+                .Where(q => ids.Any(id => id == q.CourseId) && q.StatusId == 3 && q.UserId == currentUser.Id)
+                .OrderByDescending(q => q.Date)
                 .ToListAsync();
+            }
+
             foreach (var item in questions)
             {
                 item.Body = WebUtility.HtmlDecode(item.Body);
@@ -165,12 +179,33 @@ namespace Wagebat.Controllers
         public async Task<IActionResult> Create()
         {
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            var userSubscriptions = await _context.Subscriptions
+                .Include(s => s.Confirmer)
+                .Include(s => s.User.Questions)
+                .Include(s => s.Package)
+                .Where(s => s.UserId == currentUser.Id && s.Confirmer != null)
+                .ToListAsync();
+            var pakagesQCount = 0;
+            var userQCount = 0;
+            if(userSubscriptions.Count > 0)
+            {
+                userQCount = userSubscriptions.FirstOrDefault().User.Questions.Count;
+                foreach (var subscription in userSubscriptions)
+                {
+                    pakagesQCount += subscription.Package.QuestionsCount;
+                }
+            }
+            
             var courses = await _context.Subscriptions
                 .Include(s => s.Package)
                 .Where(s => s.UserId == currentUser.Id)
                 .SelectMany(s => s.Package.CoursePackages)
-                .Select(cp => cp.Course).ToListAsync();
+                .Select(cp => cp.Course)
+                .Distinct()
+                .ToListAsync();
+
             ViewData["ShowMessage"] = false;
+            ViewData["Message"] = "You have " + (pakagesQCount - userQCount) + " Questions Left!";
             ViewData["Courses"] = new SelectList(courses, "Id", "Name");
             return View();
         }
@@ -184,21 +219,23 @@ namespace Wagebat.Controllers
         {
 
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
-            var userSubscription = _context.Subscriptions
+            var userSubscriptions = await _context.Subscriptions
                 .Include(s => s.Confirmer)
-                .Where(s => s.UserId == currentUser.Id && s.User.Questions.Count < s.Package.QuestionsCount)
-                .FirstOrDefault();
-
+                .Include(s => s.User.Questions)
+                .Include(s => s.Package)
+                .Where(s => s.UserId == currentUser.Id && s.Confirmer != null)
+                .ToListAsync();
+            
             var courses = await _context.Subscriptions
                 .Include(s => s.Package)
                 .Where(s => s.UserId == currentUser.Id)
                 .SelectMany(s => s.Package.CoursePackages)
                 .Select(cp => cp.Course).ToListAsync();
 
-            if (userSubscription == null || question.Body == null)
+            if (userSubscriptions.Count < 1 || question.Body == null)
             {
-                if (userSubscription == null)
-                    ModelState.AddModelError(string.Empty, "Sorry, You don't have any available subscriptions!");
+                if (userSubscriptions == null)
+                    ModelState.AddModelError(string.Empty, "Sorry, You don't have any available subscriptions! or Your subscription doesn't confirmed yet!");
 
                 if (question.Body == null)
                     ModelState.AddModelError(string.Empty, "Question field is Required!");
@@ -208,25 +245,11 @@ namespace Wagebat.Controllers
                 return View(question);
             }
 
-            if (userSubscription.Confirmer == null)
+            var pakagesQCount = 0;
+            var userQCount = userSubscriptions.FirstOrDefault().User.Questions.Count;
+            foreach (var subscription in userSubscriptions)
             {
-                ModelState.AddModelError(string.Empty, "Your subscription doesn't confirmed yet! Please wait until your subscription confirmed.");
-                ViewData["Courses"] = new SelectList(courses, "Id", "Name");
-                ViewData["ShowMessage"] = false;
-                return View(question);
-            }
-
-            if (userSubscription == null || question.Body == null)
-            {
-                if (userSubscription == null)
-                    ModelState.AddModelError(string.Empty, "Sorry, You don't have any subscriptions Yet!");
-
-                if (question.Body == null)
-                    ModelState.AddModelError(string.Empty, "Question field is Required!");
-
-                ViewData["Courses"] = new SelectList(courses, "Id", "Name");
-                ViewData["ShowMessage"] = false;
-                return View(question);
+                pakagesQCount += subscription.Package.QuestionsCount;
             }
 
             var pathToSave = Path.Combine("images", "questions");
@@ -243,13 +266,13 @@ namespace Wagebat.Controllers
             Question newQuestion = new Question
             {
                 CourseId = question.CourseId,
-                SubscriptionId = userSubscription.Id,
+                SubscriptionId = userSubscriptions.FirstOrDefault().Id,
                 Status = await _context.Statuses.FirstOrDefaultAsync(),
                 UserId = currentUser.Id,
                 Date = DateTime.Now
             };
             newQuestion.Body = WebUtility.HtmlEncode(question.Body);
-            foreach(var attatchment in attatchments)
+            foreach (var attatchment in attatchments)
             {
                 newQuestion.QuestionAttachments.Add(new QuestionAttachment { Path = attatchment });
             }
@@ -257,6 +280,7 @@ namespace Wagebat.Controllers
             await _context.SaveChangesAsync();
 
             ViewData["ShowMessage"] = true;
+            ViewData["Message"] = "You have " + (pakagesQCount - userQCount - 1) + " Questions Left!";
             ViewData["Courses"] = new SelectList(_context.Courses, "Id", "Name");
             return View();
         }
@@ -349,18 +373,6 @@ namespace Wagebat.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
-        [HttpPost]
-        public async Task<IActionResult> ApplyQuestion(int id)
-        {
-            var question = await _context.Questions.FindAsync(id);
-            question.Status.Id = 3;
-            _context.Questions.Update(question);
-            await _context.SaveChangesAsync();
-            return View();
-        }
-
-
 
         private bool QuestionExists(int id)
         {

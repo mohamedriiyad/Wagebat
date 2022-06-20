@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Threading.Tasks;
 using Wagebat.Data;
 using Wagebat.Models;
 
@@ -56,7 +55,10 @@ namespace Wagebat.Controllers
         public async Task<IActionResult> InstructorsConfirmationsIndex()
         {
             var instructors = await _context.ApplicationUsers
-                .Include(a => a.Courses).ToListAsync();
+                .Include(a => a.Courses)
+                .Where(a => a.EmailConfirmed == false)
+                .Where(a => a.Courses.Count >= 1)
+                .ToListAsync();
 
             return View(instructors);
         }
@@ -100,6 +102,7 @@ namespace Wagebat.Controllers
             if (instructor == null)
                 return Json(false);
 
+            instructor.EmailConfirmed = true;
             _context.ApplicationUsers.Update(instructor);
             await _context.SaveChangesAsync();
 

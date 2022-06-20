@@ -53,6 +53,14 @@ namespace Wagebat.Controllers
             return View(subscriptions);
         }
 
+        public async Task<IActionResult> InstructorsConfirmationsIndex()
+        {
+            var instructors = await _context.ApplicationUsers
+                .Include(a => a.Courses).ToListAsync();
+
+            return View(instructors);
+        }
+
         [HttpPost]
         [Authorize(Roles = "admin")]
         public async Task<JsonResult> Confirm (int? id)
@@ -73,6 +81,26 @@ namespace Wagebat.Controllers
             subscription.Confirmer = await _userManager.FindByNameAsync(User.Identity.Name);
             subscription.StatusId = 2;
             _context.Subscriptions.Update(subscription);
+            await _context.SaveChangesAsync();
+
+            return Json(true);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        public async Task<JsonResult> InstructorsConfirm(string id)
+        {
+            if (id == null)
+                return Json(false);
+
+            var instructor = await _context.ApplicationUsers
+                .Include(a => a.Courses)
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            if (instructor == null)
+                return Json(false);
+
+            _context.ApplicationUsers.Update(instructor);
             await _context.SaveChangesAsync();
 
             return Json(true);
@@ -100,6 +128,7 @@ namespace Wagebat.Controllers
             return View(subscription);
         }
 
+        [Authorize]
         // GET: Subscriptions/Create
         public IActionResult Create(int id)
         {

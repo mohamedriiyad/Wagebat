@@ -1,0 +1,134 @@
+﻿@model IEnumerable<Wagebat.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-users icon-gradient bg-happy-itmeo">
+                </i>
+            </div>
+            <div>
+                All Subscription
+                <div class="page-title-subheading">
+
+                </div>
+            </div>
+        </div>
+        <div class="page-title-actions">
+
+            @*<div class="d-inline-block">
+                    <p>
+                        <a href="@Url.Action("Create", "Transactions")" class="btn btn-primary">
+                            Create &nbsp; <i class="pe-7s-add-user"></i>
+                        </a>
+                    </p>
+                </div>*@
+        </div>
+    </div>
+</div>
+
+
+<div class="row clearfix">
+    <div class="col-lg-12">
+
+        <div class="card">
+            <div class="body">
+
+                <div class="table-responsive">
+                    <input type="hidden" id="subscriptionId" />
+                    <table class=" mb-0 table table-bordered col-lg-12" style="text-align: center">
+                        <tr>
+                            <th>
+                                User Name
+                            </th>
+                            <th>
+                                Instructor courses
+                            </th>
+                            <th>__________</th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UserName)
+                                </td>
+                                <td>
+                                    @foreach (var course in item.Courses)
+                                    {
+                                        @Html.DisplayFor(modelItem => course.Name) <br /> <br />
+                                    }
+                                </td>
+
+                                <td style="font-size: 20px;">
+                                    <a href="#" class="btn btn-group-lg" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Confirm" onclick="confirm('@item.Id')">Confirm</a>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div><!-- #content end -->
+</div>
+
+<!--Modal-->
+<div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="margin-top: 77px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to Confirm this Subscription?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" onclick="deleteOrder()">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        var confirm = function (id) {
+            $("#subscriptionId").val(id);
+        }
+
+        var deleteOrder = function () {
+            var _id = $("#subscriptionId").val();
+            $.ajax({
+                type: "POST",
+                url: "/Subscriptions/InstructorsConfirm",
+                data: { id: _id },
+                success: function (result) {
+                    if (result) {
+                        $("#deleteModal").fadeOut(500);
+                        $("#orderId").val(null);
+                        window.location.href = "/Subscriptions/InstructorsConfirmationsIndex";
+                    } else {
+                        alert("Something went wrong while processing your request.");
+                    }
+                }
+            });
+        }
+
+        var cancel = function () {
+            $("#deleteModal").fadeOut(500);
+        }
+    </script>
+
+}

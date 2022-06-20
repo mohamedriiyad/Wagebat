@@ -57,7 +57,7 @@
                                 <td style="font-size: 20px;">
                                     <a style="color: #afafaa;" data-toggle="tooltip" data-placement="left" title="Edit" href="@Url.Action("Edit", "Status", new { id = item.Id})"><i title="Edit" class="pe-7s-pen"></i></a>
 
-                                    <a href="#" style="color:red;" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Delete" onclick="confirm('@item.Id')"><i class="pe-7s-trash"></i></a>
+                                    @*<a href="#" style="color:red;" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Delete" onclick="confirm('@item.Id')"><i class="pe-7s-trash"></i></a>*@
                                 </td>
                             </tr>
                         }

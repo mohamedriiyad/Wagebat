@@ -63,6 +63,7 @@ namespace Wagebat.Controllers
 
             var currentUser = await _userManager.FindByIdAsync(id);
             var userInDb = await _db.ApplicationUsers.Include(a => a.Courses).FirstOrDefaultAsync(u => u.Id == currentUser.Id);
+            userInDb.EmailConfirmed = true;
             try
             {
                 foreach (var courseId in input.CoursesIds)
@@ -84,7 +85,7 @@ namespace Wagebat.Controllers
             if(User.IsInRole("admin"))
                 return RedirectToAction("Index", "Courses");
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("InstructorsConfirmationsIndex", "Subscriptions");
         }
 
         [HttpPost]

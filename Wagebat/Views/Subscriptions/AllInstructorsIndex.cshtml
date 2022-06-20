@@ -13,7 +13,7 @@
                 </i>
             </div>
             <div>
-                Instructors Confirmation List
+                All Instructors
                 <div class="page-title-subheading">
 
                 </div>
@@ -42,7 +42,7 @@
                             <th>
                                 Instructor courses
                             </th>
-                            <th>__________</th>
+                            @*<th>__________</th>*@
                         </tr>
 
                         @foreach (var item in Model)
@@ -58,10 +58,10 @@
                                     }
                                 </td>
 
-                                <td style="font-size: 20px;">
+                                <!--<td style="font-size: 20px;">-->
                                     @*<a href="#" class="btn btn-group-lg" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Confirm" onclick="confirm('@item.Id')">Confirm</a>*@
-                                    <a asp-controller="Administration" asp-action="CreateCourse"asp-route-id="@item.Id" class="btn btn-group-lg" title="Confirm" style="color: blue">Confirm</a>
-                                </td>
+                                    <!--<a asp-controller="Administration" asp-action="CreateCourse" asp-route-id="@item.Id" class="btn btn-group-lg" title="Confirm" style="color: blue">Confirm</a>
+                                </td>-->
                             </tr>
                         }
                     </table>

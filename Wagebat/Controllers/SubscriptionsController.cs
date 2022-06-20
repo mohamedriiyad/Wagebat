@@ -56,7 +56,17 @@ namespace Wagebat.Controllers
         {
             var instructors = await _context.ApplicationUsers
                 .Include(a => a.Courses)
+                .Where(a => a.Courses.Count == 0)
                 .Where(a => a.EmailConfirmed == false)
+                .ToListAsync();
+
+            return View(instructors);
+        }
+        public async Task<IActionResult> AllInstructorsIndex()
+        {
+            var instructors = await _context.ApplicationUsers
+                .Include(a => a.Courses)
+                .Where(a => a.Courses.Count >= 1)
                 .ToListAsync();
 
             return View(instructors);

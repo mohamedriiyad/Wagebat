@@ -57,7 +57,6 @@ namespace Wagebat.Controllers
             var instructors = await _context.ApplicationUsers
                 .Include(a => a.Courses)
                 .Where(a => a.EmailConfirmed == false)
-                .Where(a => a.Courses.Count >= 1)
                 .ToListAsync();
 
             return View(instructors);

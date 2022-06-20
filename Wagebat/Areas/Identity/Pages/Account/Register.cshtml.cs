@@ -143,7 +143,7 @@ namespace Wagebat.Areas.Identity.Pages.Account
             if (Input.RoleId == 0)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("CreateCourse", "Administration");
+                return RedirectToAction("Index", "Home");
             }
             else
             {

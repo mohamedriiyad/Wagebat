@@ -60,6 +60,7 @@
 
                                 <td style="font-size: 20px;">
                                     <a href="#" class="btn btn-group-lg" data-placement="left" data-toggle="modal" data-target=".bd-example-modal-sm" title="Confirm" onclick="confirm('@item.Id')">Confirm</a>
+                                    <a asp-controller="Administration" asp-action="CreateCourse"asp-route-id="@item.Id" class="btn btn-group-lg" title="Confirm">Confirm2</a>
                                 </td>
                             </tr>
                         }

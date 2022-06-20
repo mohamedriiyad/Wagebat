@@ -51,9 +51,9 @@ namespace Wagebat.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "instructor,admin")]
+        [Authorize(Roles = "admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateCourse(InstructorCourseInput input)
+        public async Task<IActionResult> CreateCourse(string id, InstructorCourseInput input)
         { 
             if(!ModelState.IsValid)
             {
@@ -61,7 +61,7 @@ namespace Wagebat.Controllers
                 return View();
             }
 
-            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            var currentUser = await _userManager.FindByIdAsync(id);
             var userInDb = await _db.ApplicationUsers.Include(a => a.Courses).FirstOrDefaultAsync(u => u.Id == currentUser.Id);
             try
             {

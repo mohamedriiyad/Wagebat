@@ -6,5 +6,6 @@
         public int TransactionId { get; set; }
         public Transaction Transaction { get; set; }
         public string Path { get; set; }
+        public bool IsImage { get; set; }
     }
 }

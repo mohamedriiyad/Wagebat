@@ -119,7 +119,7 @@ namespace Wagebat.Controllers
                     StatusId = 2,
                     AnswerDate = DateTime.Now
                 };
-                transactionInput = transaction;
+                transactionInput = newTransaction;
             }
 
             var questionInDb = await _context.Questions.FindAsync(transaction.QuestionId);

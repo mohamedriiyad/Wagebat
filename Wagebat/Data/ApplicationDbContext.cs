@@ -33,6 +33,7 @@ namespace Wagebat.Data
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<TransactionAttachment> TransactionAttachments { get; set; }
+        public DbSet<CommentAttachment> CommentAttachments { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

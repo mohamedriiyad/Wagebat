@@ -3,11 +3,18 @@
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var counter = 0;
-    var counter1 = 0;
+    var qAttachmentsCounter = 0;
+    var aAttachmentsCounter = 0;
+    var qLinksCounter = 1;
+    var aLinksCounter = 1;
+    var questionsCount = Model.Question.QuestionAttachments.Count;
+    var answersCount = Model.TransactionAttachments.Count;
 }
 
 <script src="~/assets/scripts/jquery-1.10.2.min.js"></script>
+<script src="~/TextEditor/jquery.min.js"></script>
+<script src="~/TextEditor/jquery-te-1.4.0.min.js"></script>
+<link href="~/TextEditor/jquery-te-1.4.0.css" rel="stylesheet" />
 <!-- ======= Frequently Asked Questions Section ======= -->
 <section id="faq" class="faq section-bg" style="margin-top: 74px">
     <div id="container" class="container" data-aos="fade-up">
@@ -19,7 +26,7 @@
 
 
         <div class="row">
-            <div class="col-8 card" style="padding-top: 12px; padding-left: 24px;">
+            <div class="col-@(questionsCount > 0 ? 8 : 12) card" style="padding-top: 12px; padding-left: 24px;">
                 <h1 style="padding-left: 0px;">Question</h1>
                 <div>
                     <hr />
@@ -37,14 +44,7 @@
                             @Html.DisplayFor(model => model.Question.Status.Name)
                         </dd>
                         <dt class="col-sm-2">
-                            @if (Model.Question.Status == null && Model.Answer != null)
-                            {
-                                @Html.DisplayNameFor(model => model.Status.Name)
-                            }
-                            else
-                            {
-                                @Html.DisplayNameFor(model => model.Question.Status.Name)
-                            }
+                            @Html.DisplayNameFor(model => model.Question.Date)
                         </dt>
                         <dd class="col-sm-10">
                             @Html.DisplayFor(model => model.Question.Date)
@@ -55,6 +55,18 @@
                         <dd class="col-sm-10">
                             @Html.Raw(Model.Question.Body)
                         </dd>
+                        @if (questionsCount > 0)
+                        {
+                            <dt class="col-sm-2">
+                                Attachments
+                            </dt>
+                            <dd class="col-sm-10">
+                                @foreach (var attachment in Model.Question.QuestionAttachments)
+                                {
+                                    <a class="btn btn-primary" target="_blank" href="@Href(attachment.Path)">Attachment @(qLinksCounter++)</a>
+                                }
+                            </dd>
+                        }
                     </dl>
                 </div>
 
@@ -74,7 +86,7 @@
                                 <div class="portfolio-item filter-app">
                                     @foreach (var item in Model.Question.QuestionAttachments)
                                     {
-                                        if (counter++ == 0)
+                                        if (qAttachmentsCounter++ == 0)
                                         {
                                             <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
 
@@ -123,7 +135,7 @@
         {
             <!--Answer-->
             <div class="row" style="margin-top:20px">
-                <div class="col-8 card" style="padding-top: 12px; padding-left: 24px;">
+                <div class="col-@(answersCount > 0 ? 8 : 12) card" style="padding-top: 12px; padding-left: 24px;">
                     <h1 style="padding-left: 0px;">Answer</h1>
                     <div>
                         <hr />
@@ -146,8 +158,19 @@
                             <dd class="col-sm-10">
                                 @Html.Raw(Model.Answer)
                             </dd>
+                            @if (answersCount > 0)
+                            {
+                                <dt class="col-sm-2">
+                                    Attachments
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @foreach (var attachment in Model.TransactionAttachments)
+                                    {
+                                        <a class="btn btn-primary" target="_blank" href="@Href(attachment.Path)">Attachment @(aLinksCounter++)</a>
+                                    }
+                                </dd>
+                            }
                         </dl>
-                        <div class="top-100" style="margin: 25rem;"></div>
                         <hr />
 
                         <div style="margin-bottom: 20px;">
@@ -182,7 +205,7 @@
                                     <div class="portfolio-item filter-app">
                                         @foreach (var item in Model.TransactionAttachments)
                                         {
-                                            if (counter1++ == 0)
+                                            if (aAttachmentsCounter++ == 0)
                                             {
                                                 <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
 
@@ -243,15 +266,21 @@
                         @foreach (var item in Model.Comments)
                         {
 
-                            <li class="exist" data-aos="fade-up" data-aos-delay="200">
+                            <li style="border: groove;" class="exist" data-aos="fade-up" data-aos-delay="200">
                                 <i class="bx bx-alarm-exclamation icon-help"></i>
                                 <a data-bs-toggle="collapse" data-bs-target="#faq-list-@item.Id" class="collapsed">
-                                    @Html.Raw(item.Body)
-                                    <i class="bx icon-show" style="margin-right: 75px">@item.User.UserName</i>
+                                    <div style="height: 2.2em; padding: 3px; overflow: hidden; margin-top: 16px; display: inline-block;">
+                                        @Html.Raw(item.Body)
+                                    </div>
+                                    <i class="bx icon-show" style="margin-right: 106px">@item.User.UserName</i>
                                     <i class="bx bx-chevron-down icon-show"></i>
 
-                                    <i class="bx icon-close" style="margin-right: 75px">@item.Date</i>
+                                    <i class="bx icon-close" style="margin-right: 106px">@item.Date</i>
                                     <i class="bx bx-chevron-up icon-close"></i>
+
+                                    <i class="bx icon-close" style="margin-top: 25px; padding-right:25px;">
+                                        <a asp-action="Details" asp-controller="Comments" asp-route-id="@item.Id" class="btn-block">Details</a>
+                                    </i>
                                 </a>
                                 <div id="faq-list-@item.Id" class="collapse" data-bs-parent=".faq-list"></div>
                             </li>
@@ -282,8 +311,23 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Add Comment</h5>
             </div>
-            <div class="modal-body">
-                <input id="comment" class="form-control shape" required placeholder="Comment">
+            <div class="modal-body" style="overflow: scroll;">
+                <label style=" margin-bottom: 5px;">Attachments</label>
+                <div id="fileDiv">
+                    <input type="file" multiple class="form-control" id="files" placeholder="Attachments">
+                </div>
+                <table class="table" id="FilesList" style="visibility:collapse">
+                    <tr>
+                        <th>
+                            Attachment(s)
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </table>
+                <label style=" margin-top: 20px;">Comment</label>
+                <textarea id="comment" class="form-control" rows="10" required placeholder="Question"></textarea>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -294,9 +338,14 @@
 </div>
 @section Scripts {
     <script type="text/javascript">
+        $(document).ready(function () {
+            $("#comment").jqte();
+        });
         var liked = false;
         var counter = 10000;
+        var formdata = new FormData();
 
+        console.log(formdata)
         var like = function (event, _id, liked) {
             this.liked = liked;
             event.preventDefault();
@@ -330,8 +379,47 @@
         var confirm = function (id, questionId) {
             document.getElementById("orderId").value = id;
             document.getElementById("questionId").value = questionId;
-            
+
             console.log(commentExist.prevObject.length)
+        }
+
+        $("#files").on("change", function () {
+            var fileInput = document.getElementById('files');
+            //Iterating through each files selected in fileInput  
+            for (i = 0; i < fileInput.files.length; i++) {
+
+                var sfilename = fileInput.files[i].name;
+                let srandomid = Math.random().toString(36).substring(7);
+
+                console.log(sfilename)
+                formdata.append(sfilename, fileInput.files[i]);
+
+                var markup = "<tr id='" + srandomid + "'><td>" + sfilename + "</td><td><a href='#' onclick='DeleteFile(\"" + srandomid + "\",\"" + sfilename +
+                    "\")'><span class='glyphicon glyphicon-remove red'>Delete</span></a></td></tr>"; // Binding the file name  
+                $("#FilesList tbody").append(markup);
+
+            } 
+            chkatchtbl();
+            $('#fileInput').val('');
+        });
+        function chkatchtbl() {
+            console.log(formdata.get("6KSNPY2224.jpg"))
+            console.log(formdata.get("NDGTVZPM1.jpg"))
+            if ($('#FilesList tr').length > 1) {
+                $("#FilesList").css("visibility", "visible");
+            } else {
+                $("#FilesList").css("visibility", "collapse");
+            }
+        }
+        function DeleteFile(Fileid, FileName) {
+            formdata.delete(FileName)
+            $("#" + Fileid).remove();
+            chkatchtbl();
+        }
+        function DeleteFiles() {
+            formdata.delete(FileName)
+            $("#" + Fileid).remove();
+            chkatchtbl();
         }
 
         var deleteOrder = function () {
@@ -343,48 +431,51 @@
             var commentExist = $(".exist").find();
             if (commentExist.prevObject.length > 0) {
                 $("#comments").append(`
-                                <li id="${rndm}" class="exist" data-aos="fade-up" data-aos-delay="200">
-                                <i class="bx bx-alarm-exclamation icon-help"></i>
-                                <a data-bs-toggle="collapse" data-bs-target="#faq-list-${counter}" class="collapsed">
-                                    ${_comment}
-                                    <i class="bx icon-show" style="margin-right: 75px">${_name}</i>
-                                    <i class="bx bx-chevron-down icon-show"></i>
+                                    <li id="${rndm}" class="exist" data-aos="fade-up" data-aos-delay="200">
+                                    <i class="bx bx-alarm-exclamation icon-help"></i>
+                                    <a data-bs-toggle="collapse" data-bs-target="#faq-list-${counter}" class="collapsed">
+                                        ${_comment}
+                                        <i class="bx icon-show" style="margin-right: 75px">${_name}</i>
+                                        <i class="bx bx-chevron-down icon-show"></i>
 
-                                    <i class="bx icon-close" style="margin-right: 75px">${new Date(Date.now()).toLocaleString()}</i>
-                                    <i class="bx bx-chevron-up icon-close"></i>
-                                    </a>
-                                    <div id="faq-list-${counter++}" class="collapse" data-bs-parent=".faq-list">
-                                    </div>
-                 </li>`);
+                                        <i class="bx icon-close" style="margin-right: 75px">${new Date(Date.now()).toLocaleString()}</i>
+                                        <i class="bx bx-chevron-up icon-close"></i>
+                                        </a>
+                                        <div id="faq-list-${counter++}" class="collapse" data-bs-parent=".faq-list">
+                                        </div>
+                     </li>`);
             } else {
                 $("#container").append(`
-                        <div class="section-title" style=" margin-top: 50px; padding-bottom:0;">
-                            <h2>All comments</h2>
-                        </div>
+                            <div class="section-title" style=" margin-top: 50px; padding-bottom:0;">
+                                <h2>All comments</h2>
+                            </div>
 
-                        <div id="fag-comments" class="faq-list">
-                         <ul id="comments">
-                       <li id="${rndm}" class="exist" data-aos="fade-up" data-aos-delay="200">
-                                <i class="bx bx-alarm-exclamation icon-help"></i>
-                                <a data-bs-toggle="collapse" data-bs-target="#faq-list-${counter}" class="collapsed">
-                                    ${_comment}
-                                    <i class="bx icon-show" style="margin-right: 75px">${_name}</i>
-                                    <i class="bx bx-chevron-down icon-show"></i>
+                            <div id="fag-comments" class="faq-list">
+                             <ul id="comments">
+                           <li id="${rndm}" class="exist" data-aos="fade-up" data-aos-delay="200">
+                                    <i class="bx bx-alarm-exclamation icon-help"></i>
+                                    <a data-bs-toggle="collapse" data-bs-target="#faq-list-${counter}" class="collapsed">
+                                        ${_comment}
+                                        <i class="bx icon-show" style="margin-right: 75px">${_name}</i>
+                                        <i class="bx bx-chevron-down icon-show"></i>
 
-                                    <i class="bx icon-close" style="margin-right: 75px">${new Date(Date.now()).toLocaleString()}</i>
-                                    <i class="bx bx-chevron-up icon-close"></i>
-                                    </a>
-                                    <div id="faq-list-${counter++}" class="collapse" data-bs-parent=".faq-list">
-                                    </div>
-                            </li>
-                    </ul>
-                </div>`);
+                                        <i class="bx icon-close" style="margin-right: 75px">${new Date(Date.now()).toLocaleString()}</i>
+                                        <i class="bx bx-chevron-up icon-close"></i>
+                                        </a>
+                                        <div id="faq-list-${counter++}" class="collapse" data-bs-parent=".faq-list">
+                                        </div>
+                                </li>
+                        </ul>
+                    </div>`);
             }
-            
+            formdata.append('body', _comment);
+            formdata.append('id', _id);
             $.ajax({
                 type: "POST",
                 url: "/Comments/Create",
-                data: { body: _comment, id: _id },
+                data: formdata,
+                processData: false,
+                contentType: false,
                 success: function (result) {
                     if (result) {
                         $("#mod").fadeOut(100);
@@ -401,6 +492,15 @@
                     }
                 }
             });
+            $("#comment").remove();
+            $('#files').val(null);
+            $("#FilesList tbody td").remove();
+
+            $(".jqte").remove();
+            $(".modal-body").append(`<textarea id = "comment" class= "form-control" rows = "10" required placeholder = "Question" ></textarea>`);
+            $("#comment").jqte();
+            $("#FilesList").css("visibility", "collapse");
+            formdata = new FormData();
         }
 
         var cancel = function () {

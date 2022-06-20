@@ -169,6 +169,10 @@ namespace Wagebat.Controllers
 
                 transaction = new Transaction { Question = question };
             }
+            foreach(var comment in transaction.Comments)
+            {
+                comment.Body = WebUtility.HtmlDecode(comment.Body);
+            }
             transaction.Question.Body = WebUtility.HtmlDecode(transaction.Question.Body);
             transaction.Answer = WebUtility.HtmlDecode(transaction.Answer);
             return View(transaction);

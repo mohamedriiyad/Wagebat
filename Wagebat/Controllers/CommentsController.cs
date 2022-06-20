@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Wagebat.Data;
+using Wagebat.Helpers;
 using Wagebat.Models;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace Wagebat.Controllers
 {
@@ -33,18 +40,16 @@ namespace Wagebat.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
+
 
             var comment = await _context.Comments
                 .Include(c => c.Transaction)
                 .Include(c => c.User)
+                .Include(c => c.CommentAttachments)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (comment == null)
-            {
                 return NotFound();
-            }
 
             return View(comment);
         }
@@ -67,13 +72,29 @@ namespace Wagebat.Controllers
                 return Json(false);
             if (comment.Body == null)
                 return Json(false);
-
+            var files = Request.Form.Files.ToList();
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
 
             comment.TransactionId = comment.Id;
             comment.Date = DateTime.Now;
             comment.UserId = currentUser.Id;
             comment.Id = 0;
+
+            var pathToSave = Path.Combine("images", "comments");
+            List<string> attatchments;
+            try
+            {
+                attatchments = await FileHelper.UploadAll(files, pathToSave);
+            }
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+            comment.Body = WebUtility.HtmlEncode(comment.Body);
+            foreach (var attatchment in attatchments)
+            {
+                comment.CommentAttachments.Add(new CommentAttachment { Path = attatchment });
+            }
             _context.Add(comment);
             await _context.SaveChangesAsync();
             return Json(true);

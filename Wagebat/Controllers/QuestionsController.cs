@@ -169,6 +169,10 @@ namespace Wagebat.Controllers
 
                 transaction = new Transaction { Question = question };
             }
+            foreach(var comment in transaction.Comments)
+            {
+                comment.Body = WebUtility.HtmlDecode(comment.Body);
+            }
             transaction.Question.Body = WebUtility.HtmlDecode(transaction.Question.Body);
             transaction.Answer = WebUtility.HtmlDecode(transaction.Answer);
             return View(transaction);
@@ -218,10 +222,8 @@ namespace Wagebat.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Question question, List<IFormFile> files)
         {
-
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
             var userSubscriptions = await _context.Subscriptions
                 .Include(s => s.Confirmer)
@@ -268,16 +270,6 @@ namespace Wagebat.Controllers
                 return View(question);
             }
 
-            var pathToSave = Path.Combine("images", "questions");
-            List<string> attatchments;
-            try
-            {
-                attatchments = await FileHelper.UploadAll(files, pathToSave);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("You are tying to add a blog without an IMAGE!");
-            }
 
             Question newQuestion = new Question
             {
@@ -288,9 +280,20 @@ namespace Wagebat.Controllers
                 Date = DateTime.Now
             };
             newQuestion.Body = WebUtility.HtmlEncode(question.Body);
+
+            var pathToSave = Path.Combine("images", "questions");
+            List<FileWithType> attatchments;
+            try
+            {
+                attatchments = await FileHelper.UploadAllWithType(files, pathToSave);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("You are tying to add a blog without an IMAGE!");
+            }
             foreach (var attatchment in attatchments)
             {
-                newQuestion.QuestionAttachments.Add(new QuestionAttachment { Path = attatchment });
+                newQuestion.QuestionAttachments.Add(new QuestionAttachment { Path = attatchment.Path, IsImage = attatchment.IsImage });
             }
             _context.Add(newQuestion);
             await _context.SaveChangesAsync();

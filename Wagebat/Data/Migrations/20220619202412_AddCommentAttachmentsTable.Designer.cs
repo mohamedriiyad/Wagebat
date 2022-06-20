@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wagebat.Data;
 
 namespace Wagebat.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220619202412_AddCommentAttachmentsTable")]
+    partial class AddCommentAttachmentsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -293,9 +295,6 @@ namespace Wagebat.Data.Migrations
                     b.Property<int>("CommentId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsImage")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Path")
                         .HasColumnType("nvarchar(max)");
 
@@ -483,9 +482,6 @@ namespace Wagebat.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("IsImage")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Path")
                         .HasColumnType("nvarchar(max)");
 
@@ -621,9 +617,6 @@ namespace Wagebat.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("IsImage")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Path")
                         .HasColumnType("nvarchar(max)");

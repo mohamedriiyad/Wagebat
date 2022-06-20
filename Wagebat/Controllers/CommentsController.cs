@@ -69,9 +69,9 @@ namespace Wagebat.Controllers
         public async Task<JsonResult> Create(Comment comment)
         {
             if (!ModelState.IsValid)
-                return Json(false);
+                return Json(new { result = false, id = 0 });
             if (comment.Body == null)
-                return Json(false);
+                return Json(new { result = false, id = 0 });
             var files = Request.Form.Files.ToList();
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
 
@@ -81,23 +81,23 @@ namespace Wagebat.Controllers
             comment.Id = 0;
 
             var pathToSave = Path.Combine("images", "comments");
-            List<string> attatchments;
+            List<FileWithType> attatchments;
             try
             {
-                attatchments = await FileHelper.UploadAll(files, pathToSave);
+                attatchments = await FileHelper.UploadAllWithType(files, pathToSave);
             }
             catch (Exception ex)
             {
-                return Json(false);
+                return Json(new {result = false, id = 0 });
             }
             comment.Body = WebUtility.HtmlEncode(comment.Body);
             foreach (var attatchment in attatchments)
             {
-                comment.CommentAttachments.Add(new CommentAttachment { Path = attatchment });
+                comment.CommentAttachments.Add(new CommentAttachment { Path = attatchment.Path, IsImage = attatchment.IsImage });
             }
             _context.Add(comment);
             await _context.SaveChangesAsync();
-            return Json(true);
+            return Json(new { result = true, id = comment.Id });
         }
 
         // GET: Comments/Edit/5

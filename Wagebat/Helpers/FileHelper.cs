@@ -8,6 +8,34 @@ namespace Wagebat.Helpers
 {
     public class FileHelper
     {
+        public static async Task<List<FileWithType>> UploadAllWithType(List<IFormFile> inputFiles, string pathToSave)
+        {
+            if (inputFiles == null)
+                return new List<FileWithType>();
+
+            var files = new List<FileWithType>();
+            foreach (var file in inputFiles)
+            {
+                var extension = Path.GetExtension(file.FileName);
+                var fileName = Guid.NewGuid().ToString() + extension;
+
+                var currentPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                var filePath = Path.Combine(pathToSave, fileName);
+                var folderPath = Path.Combine(currentPath, pathToSave);
+
+                // Check if the Path exist
+                if (!Directory.Exists(folderPath))
+                    Directory.CreateDirectory(folderPath);
+
+                // Upload the file
+                using var stream = new FileStream(Path.Combine(currentPath, filePath), FileMode.Create);
+                await file.CopyToAsync(stream);
+                var isImage = Equals(file.ContentType.Split('/')[0], "image"); 
+                files.Add(new FileWithType { Path = Path.Combine("\\", filePath), IsImage = isImage });
+            }
+
+            return files;
+        }
         public static async Task<List<string>> UploadAll(List<IFormFile> inputFiles, string pathToSave)
         {
             if (inputFiles == null)

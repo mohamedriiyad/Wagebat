@@ -80,13 +80,13 @@ namespace Wagebat.Controllers
                 return View(transaction);
             }
 
-            List<string> attatchments = new List<string>();
+            List<FileWithType> attatchments = new List<FileWithType>();
             if (files.Count > 0)
             {
                 var pathToSave = Path.Combine("images", "answers");
                 try
                 {
-                    attatchments = await FileHelper.UploadAll(files, pathToSave);
+                    attatchments = await FileHelper.UploadAllWithType(files, pathToSave);
                 }
                 catch (Exception ex)
                 {
@@ -131,7 +131,7 @@ namespace Wagebat.Controllers
             transactionInput.Answer = WebUtility.HtmlEncode(transaction.Answer);
             foreach (var attatchment in attatchments)
             {
-                transactionInput.TransactionAttachments.Add(new TransactionAttachment { Path = attatchment });
+                transactionInput.TransactionAttachments.Add(new TransactionAttachment { Path = attatchment.Path, IsImage = attatchment.IsImage });
             }
 
             ViewData["ShowMessage"] = true;

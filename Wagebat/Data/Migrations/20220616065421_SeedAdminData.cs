@@ -7,9 +7,12 @@ namespace Wagebat.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(@"
-INSERT INTO [dbo].[AspNetUsers] ([Id], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [Discriminator]) VALUES (N'121a58b9-5405-44a6-a69a-4bf75bd5b9fe', N'admin', N'ADMIN', N'admin@wagebat.com', N'ADMIN@WAGEBAT.COM', 0, N'AQAAAAEAACcQAAAAEJWevxtd1JyK6jLS4qtgXwjr1RcCzFqe8qGT/5GBLEJGXITyh3w+z5prXKCvCtaIIQ==', N'LRS7IW2OXAO6LHYID6SBEQJGAR56WAZN', N'6f658413-a81d-4d52-83fc-49f0bd5d0481', N'0120000000', 0, 0, NULL, 1, 0, N'ApplicationUser')
-INSERT INTO [dbo].[AspNetRoles] ([Id], [Name], [NormalizedName], [ConcurrencyStamp]) VALUES (N'8051df92-b636-4af1-91ac-72dd326bde92', N'admin', N'ADMIN', N'9aa1ec96-bcdc-4b2a-b41e-815eb5e96548')
-INSERT INTO [dbo].[AspNetUserRoles] ([UserId], [RoleId]) VALUES (N'121a58b9-5405-44a6-a69a-4bf75bd5b9fe', N'8051df92-b636-4af1-91ac-72dd326bde92')
+            INSERT INTO[dbo].[AspNetUsers] ([Id], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [Discriminator]) VALUES(N'67456f6e-543f-490b-9c4b-38272c680ed6', N'admin', N'ADMIN', N'admin@wagebat.com', N'ADMIN@WAGEBAT.COM', 0, N'AQAAAAEAACcQAAAAEKM7+opimbSrIeQgu8vE0y4FiWkXsyimUMR5eLKi8jAUQmaC9Rs6j+eHeZVushjrSQ==', N'JOH4EXGICT5YZ44XO37VSNADXUGOOHQW', N'fc4102e2-8f93-412d-a392-fde50733d59a', N'01014581574', 0, 0, NULL, 1, 0, N'ApplicationUser')
+
+            INSERT INTO [dbo].[AspNetRoles] ([Id], [Name], [NormalizedName], [ConcurrencyStamp]) VALUES (N'c015a870-067f-4a32-9697-a3a6fb81f448', N'admin', N'ADMIN', N'61483ca5-ddeb-4e79-a1c3-6b91173bc231')
+
+            INSERT INTO [dbo].[AspNetUserRoles] ([UserId], [RoleId]) VALUES (N'67456f6e-543f-490b-9c4b-38272c680ed6', N'c015a870-067f-4a32-9697-a3a6fb81f448')
+
 ");
         }
 
